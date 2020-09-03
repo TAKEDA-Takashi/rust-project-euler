@@ -4,32 +4,7 @@
 // 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ...
 // 数列の項の値が400万以下の, 偶数値の項の総和を求めよ.
 
-#[derive(Debug)]
-struct Fibo {
-    current: usize,
-    prev: usize,
-}
-
-impl Fibo {
-    fn new() -> Fibo {
-        Fibo {
-            current: 1,
-            prev: 0,
-        }
-    }
-}
-
-impl Iterator for Fibo {
-    type Item = usize;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let next = self.current + self.prev;
-        self.prev = self.current;
-        self.current = next;
-
-        Some(next)
-    }
-}
+use problem_2::Fibo;
 
 fn is_even(n: &usize) -> bool {
     n % 2 == 0
