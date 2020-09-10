@@ -10,7 +10,7 @@ impl Fibo {
     /// # Example
     ///
     /// ```
-    /// use problem_2::Fibo;
+    /// use problem_002::Fibo;
     ///
     /// let mut fibo = Fibo::new();
     /// assert_eq!(fibo.next(), Some(1));
