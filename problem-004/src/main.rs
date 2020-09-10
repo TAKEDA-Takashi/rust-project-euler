@@ -11,11 +11,19 @@ fn is_palindrome(n: i32) -> bool {
     s == s.chars().rev().collect::<String>()
 }
 
+fn to_palindrome(t: (i32, i32)) -> Option<(i32, i32, i32)> {
+    let m = t.0 * t.1;
+    if is_palindrome(m) {
+        Some((t.0, t.1, m))
+    } else {
+        None
+    }
+}
+
 fn main() {
     let max_palindrome = (100..=999)
         .flat_map(|n| repeat(n).zip(n..=999))
-        .map(|p| (p.0, p.1, p.0 * p.1))
-        .filter(|t| is_palindrome(t.2))
+        .filter_map(to_palindrome)
         .sorted_by(|t1, t2| Ord::cmp(&t2.2, &t1.2)) // order by desc
         .next()
         .unwrap();
