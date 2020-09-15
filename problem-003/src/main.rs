@@ -2,7 +2,6 @@
 //!
 //! 13195 の素因数は 5, 7, 13, 29 である.
 //! 600851475143 の素因数のうち最大のものを求めよ.
-use std::vec::Vec;
 
 fn prime_factorization(n: usize) -> Vec<usize> {
     if n == 1 {
