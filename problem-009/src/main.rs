@@ -27,8 +27,7 @@ fn main() {
     let (a, b, c) = (2..)
         .flat_map(|n| repeat(n).zip(1..n)) // 原始ピラゴラス数に限定しないため互いに素は条件に含めない
         .map(|(m, n)| make_pythagorean_triple(m, n))
-        .skip_while(|(a, b, c)| a + b + c != 1000)
-        .next()
+        .find(|(a, b, c)| a + b + c == 1000)
         .unwrap();
 
     // println!("a = {}, b = {}, c = {}", a, b, c);
