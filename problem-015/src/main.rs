@@ -9,8 +9,7 @@ fn combination(n: usize, r: usize) -> usize {
         return 1;
     }
 
-    let m = r - 1;
-    combination(n, m) * (n - r + 1) / r
+    combination(n, r - 1) * (n - r + 1) / r
 }
 
 fn main() {
