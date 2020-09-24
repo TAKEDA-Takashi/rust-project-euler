@@ -24,7 +24,7 @@ fn main() {
     let max_palindrome = (100..=999)
         .flat_map(|n| repeat(n).zip(n..=999))
         .filter_map(to_palindrome)
-        .sorted_by(|t1, t2| Ord::cmp(&t2.2, &t1.2)) // order by desc
+        .sorted_by(|(.., p1), (.., p2)| Ord::cmp(p2, p1)) // order by desc
         .next()
         .unwrap();
 
