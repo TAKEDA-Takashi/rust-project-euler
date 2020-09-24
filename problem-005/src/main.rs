@@ -4,15 +4,13 @@
 //! では, 1 から 20 までの整数全てで割り切れる数字の中で最小の正の数はいくらになるか.
 
 fn main() {
-    let p = (2..=20)
-        .fold(vec![], |mut acc, n| {
-            acc.push(
-                acc.iter()
-                    .fold(n, |d, a| if d % a == 0 { d / a } else { d }),
-            );
-            acc
-        })
-        .iter()
-        .product::<i32>();
-    println!("{}", p);
+    println!("{}", (2..=20).fold(1, |acc, n| acc * n / gcd(acc, n)));
+}
+
+fn gcd(a: usize, b: usize) -> usize {
+    if b == 0 {
+        a
+    } else {
+        gcd(b, a % b)
+    }
 }
