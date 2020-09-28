@@ -36,11 +36,11 @@ impl Iterator for Prime {
                 Some(3)
             }
             Some(last_prime) => {
-                let next_prime = ((last_prime + 2)..).step_by(2).find(|n| {
+                let next_prime = ((last_prime + 2)..).step_by(2).find(|&n| {
                     self.ps
                         .iter()
-                        .take_while(|p| *p * *p <= *n)
-                        .all(|p| n % p != 0)
+                        .take_while(|&&p| p * p <= n)
+                        .all(|&p| n % p != 0)
                 })?;
 
                 self.ps.push(next_prime);
