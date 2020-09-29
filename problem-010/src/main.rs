@@ -8,6 +8,6 @@ use problem_010::Prime;
 fn main() {
     println!(
         "{}",
-        Prime::new().take_while(|p| *p < 2_000_000).sum::<usize>()
+        Prime::new().take_while(|&p| p <= 2_000_000).sum::<usize>()
     );
 }
