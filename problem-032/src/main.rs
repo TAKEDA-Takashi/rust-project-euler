@@ -10,13 +10,14 @@
 
 // 条件を整理すると、(a, b, c)の3つ組（a < b）は (1桁, 4桁, 4桁)か(2桁, 3桁, 4桁)しかありえない。
 
-use std::collections::{BTreeSet, HashSet};
+use itertools::Itertools;
+use std::collections::HashSet;
 
 fn main() {
     println!(
         "{}",
-        perm(9)
-            .iter()
+        (1..=9)
+            .permutations(9)
             .filter_map(|p| {
                 let a = p[0];
                 let b = join_to_usize(&p[1..=4]);
@@ -48,26 +49,4 @@ fn join_to_usize(v: &[usize]) -> usize {
         .collect::<String>()
         .parse()
         .unwrap()
-}
-
-fn perm(n: usize) -> Vec<Vec<usize>> {
-    perm0((1..=n).collect(), vec![])
-}
-
-fn perm0(set: BTreeSet<usize>, v: Vec<usize>) -> Vec<Vec<usize>> {
-    if set.is_empty() {
-        return vec![v];
-    }
-
-    set.iter()
-        .flat_map(|n| {
-            let mut s = set.clone();
-            s.remove(n);
-
-            let mut p = v.clone();
-            p.push(*n);
-
-            perm0(s, p)
-        })
-        .collect()
 }
