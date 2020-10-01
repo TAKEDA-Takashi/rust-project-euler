@@ -2,8 +2,8 @@ use num_bigint::BigUint;
 
 #[derive(Debug)]
 pub struct Fibo {
-    current: BigUint,
-    prev: BigUint,
+    current: Option<BigUint>,
+    prev: Option<BigUint>,
 }
 
 impl Fibo {
@@ -22,8 +22,8 @@ impl Fibo {
     /// ```
     pub fn new() -> Fibo {
         Fibo {
-            current: BigUint::from(1_u32),
-            prev: BigUint::from(0_u32),
+            current: Some(BigUint::from(1_u32)),
+            prev: Some(BigUint::from(0_u32)),
         }
     }
 }
@@ -32,11 +32,11 @@ impl Iterator for Fibo {
     type Item = BigUint;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let c = self.current.clone();
+        let c = self.current.take();
 
-        self.current = &c + &self.prev;
+        self.current = c.as_ref().zip(self.prev.as_ref()).map(|(a, b)| a + b);
         self.prev = c.clone();
 
-        Some(c)
+        c
     }
 }
