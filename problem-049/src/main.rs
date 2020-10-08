@@ -10,7 +10,7 @@
 
 use itertools::Itertools;
 use problem_049::Prime;
-use std::collections::{BTreeSet, HashSet};
+use std::collections::BTreeSet;
 
 fn main() {
     let set: BTreeSet<usize> = Prime::new()
@@ -21,14 +21,14 @@ fn main() {
     println!(
         "{}",
         set.iter()
-            .combinations(2)
-            .map(|c| [*c[0], *c[1], c[1] + c[1] - c[0]])
+            .tuple_combinations()
+            .map(|(&a, &b)| [a, b, b + b - a])
             .filter(|[.., c]| set.contains(c))
             .filter(|[a, b, c]| {
                 let (x, y, z) = (
-                    a.to_string().chars().collect::<HashSet<_>>(),
-                    b.to_string().chars().collect::<HashSet<_>>(),
-                    c.to_string().chars().collect::<HashSet<_>>(),
+                    a.to_string().chars().sorted().collect::<Vec<_>>(),
+                    b.to_string().chars().sorted().collect::<Vec<_>>(),
+                    c.to_string().chars().sorted().collect::<Vec<_>>(),
                 );
 
                 x == y && y == z
