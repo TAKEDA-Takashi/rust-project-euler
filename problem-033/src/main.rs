@@ -8,14 +8,14 @@
 //!
 //! その4個の分数の積が約分された形で与えられたとき, 分母の値を答えよ.
 
+use itertools::Itertools;
 use std::collections::HashSet;
-use std::iter::repeat;
 
 fn main() {
     println!(
         "{}",
-        (10..=98_usize)
-            .flat_map(|n| repeat(n).zip(n + 1..=99_usize))
+        (11..=99)
+            .tuple_combinations()
             .filter(|(m, d)| m % 10 != 0 && d % 10 != 0) // trivial and either ten multiple
             .filter_map(|(m, d)| {
                 let g = gcd(m, d);
@@ -25,9 +25,8 @@ fn main() {
 
                 let digit_canceling = |t| {
                     let (m2, d2) = trip_number(m, d, t);
-                    let g2 = gcd(m2, d2);
 
-                    if m / g == m2 / g2 && d / g == d2 / g2 {
+                    if m * d2 == d * m2 {
                         return Some((m, d));
                     } else {
                         None
@@ -71,7 +70,7 @@ fn mutual_number(a: usize, b: usize) -> Vec<usize> {
     s2.insert(b % 10);
     s2.insert(b / 10);
 
-    s1.intersection(&s2).map(|c| c.to_owned()).collect()
+    s1.intersection(&s2).copied().collect()
 }
 
 // Same problem-005
