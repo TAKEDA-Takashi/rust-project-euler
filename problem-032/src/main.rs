@@ -44,9 +44,5 @@ fn main() {
 }
 
 fn join_to_usize(v: &[usize]) -> usize {
-    v.iter()
-        .map(|n| n.to_string())
-        .collect::<String>()
-        .parse()
-        .unwrap()
+    v.iter().join("").parse().unwrap()
 }
