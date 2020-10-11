@@ -1,6 +1,10 @@
 use num::{one, range_step, zero, CheckedAdd, FromPrimitive, Integer};
 use std::collections::BTreeMap;
 
+pub mod func;
+
+pub use func::*;
+
 #[derive(Debug)]
 pub struct Prime<T> {
     prime_factor_map: BTreeMap<T, Vec<T>>,
