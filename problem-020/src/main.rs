@@ -9,23 +9,16 @@
 //!
 //! 注: Problem 16 も各位の数字の和に関する問題です。解いていない方は解いてみてください。
 
+use euler_lib::factorial;
 use num_bigint::BigUint;
 
 fn main() {
     println!(
         "{}",
-        factorial(100)
+        factorial(&BigUint::from(100_u32))
             .to_string()
             .chars()
             .filter_map(|c| c.to_digit(10))
             .sum::<u32>()
     );
-}
-
-fn factorial(n: usize) -> BigUint {
-    match n {
-        0 => BigUint::from(1_u32),
-        1 => BigUint::from(1_u32),
-        _ => (2..n).fold(BigUint::from(n), |acc, m| acc * m),
-    }
 }
