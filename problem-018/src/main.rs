@@ -107,24 +107,24 @@ fn load_triangle() -> Vec<Vec<Node>> {
 }
 
 fn print_max_route(graph: &Vec<Vec<Node>>) {
-    print_max_route0(graph, 0, 0);
-    println!();
-}
+    fn print_max_route0(graph: &Vec<Vec<Node>>, row: usize, col: usize) {
+        let node = &graph[row][col];
 
-fn print_max_route0(graph: &Vec<Vec<Node>>, row: usize, col: usize) {
-    let node = &graph[row][col];
+        print!("{} ", node.cost);
 
-    print!("{} ", node.cost);
-
-    if let Some(lw) = node.left_weight {
-        if let Some(rw) = node.right_weight {
-            if lw >= rw {
-                print_max_route0(graph, row + 1, col);
+        if let Some(lw) = node.left_weight {
+            if let Some(rw) = node.right_weight {
+                if lw >= rw {
+                    print_max_route0(graph, row + 1, col);
+                } else {
+                    print_max_route0(graph, row + 1, col + 1);
+                }
             } else {
-                print_max_route0(graph, row + 1, col + 1);
+                print_max_route0(graph, row + 1, col);
             }
-        } else {
-            print_max_route0(graph, row + 1, col);
         }
     }
+
+    print_max_route0(graph, 0, 0);
+    println!();
 }
