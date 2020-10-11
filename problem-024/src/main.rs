@@ -10,20 +10,23 @@
 fn main() {
     let digit = 10;
     let fs = get_factorials(digit);
-    let mut ns: Vec<usize> = (0..digit).collect();
-    let mut target = 1_000_000 - 1; // 0-origin
 
-    for i in 0..digit {
-        let j = target / fs[i];
+    let (ns, _) = (0..digit).fold(
+        ((0..digit).collect::<Vec<_>>(), 1_000_000 - 1), // 0-origin
+        |(ns, target), i| {
+            let j = target / fs[i]; // 小数点以下切り捨て
 
-        for i2 in (i + 1..=j + i).rev() {
-            let tmp = ns[i2];
-            ns[i2] = ns[i2 - 1];
-            ns[i2 - 1] = tmp;
-        }
-
-        target -= fs[i] * j;
-    }
+            (
+                (i + 1..=j + i).rev().fold(ns, |mut acc, k| {
+                    let tmp = acc[k];
+                    acc[k] = acc[k - 1];
+                    acc[k - 1] = tmp;
+                    acc
+                }),
+                target - fs[i] * j,
+            )
+        },
+    );
 
     println!("{}", ns.iter().map(|n| n.to_string()).collect::<String>());
 }
