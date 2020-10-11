@@ -22,7 +22,7 @@ where
         }
     }
 
-    pub fn factorization(&mut self, n: T) -> &Vec<T> {
+    pub fn factorization(&mut self, n: &T) -> &Vec<T> {
         if self.prime_factor_map.contains_key(&n) {
             return &self.prime_factor_map[&n];
         }
@@ -176,11 +176,11 @@ mod tests {
     fn prime_factorization() {
         let mut prime = Prime::new();
 
-        assert_eq!(vec![2, 2, 2], *prime.factorization(8));
-        assert_eq!(vec![5, 5], *prime.factorization(25));
-        assert_eq!(vec![2, 2, 3, 5], *prime.factorization(60));
-        assert_eq!(vec![17], *prime.factorization(17));
-        assert_eq!(vec![23, 29], *prime.factorization(667));
+        assert_eq!(vec![2, 2, 2], *prime.factorization(&8));
+        assert_eq!(vec![5, 5], *prime.factorization(&25));
+        assert_eq!(vec![2, 2, 3, 5], *prime.factorization(&60));
+        assert_eq!(vec![17], *prime.factorization(&17));
+        assert_eq!(vec![23, 29], *prime.factorization(&667));
     }
 
     #[test]
