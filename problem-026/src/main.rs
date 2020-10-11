@@ -19,8 +19,8 @@
 #[macro_use]
 extern crate lazy_static;
 
+use euler_lib::Prime;
 use num_bigint::BigUint;
-use problem_026::Prime;
 
 lazy_static! {
     static ref ZERO: BigUint = BigUint::from(0_u32);
@@ -29,26 +29,26 @@ lazy_static! {
 }
 
 fn main() {
-    let ps: Vec<BigUint> = Prime::new()
+    let ps: Vec<BigUint> = Prime::<BigUint>::new()
+        .iter()
         .skip(3) // 2と5は循環小数にならない。3はついで
-        .take_while(|&p| p < 1000)
-        .map(|p| BigUint::from(p))
+        .take_while(|p| *p < BigUint::from(1000_u32))
         .collect();
 
     println!("{}", find_max_cycle(ps).unwrap());
 }
 
 fn find_max_cycle(ps: Vec<BigUint>) -> Option<BigUint> {
-    find_max_cycle0(ps, BigUint::from(11_u32))
-}
-
-fn find_max_cycle0(ps: Vec<BigUint>, one_seq: BigUint) -> Option<BigUint> {
-    match ps.len() {
-        0 => None,
-        1 => Some(ps[0].clone()),
-        _ => find_max_cycle0(
-            ps.into_iter().filter(|p| &one_seq % p != *ZERO).collect(),
-            one_seq * &*TEN + &*ONE,
-        ),
+    fn find_max_cycle0(ps: Vec<BigUint>, one_seq: BigUint) -> Option<BigUint> {
+        match ps.len() {
+            0 => None,
+            1 => Some(ps[0].clone()),
+            _ => find_max_cycle0(
+                ps.into_iter().filter(|p| &one_seq % p != *ZERO).collect(),
+                one_seq * &*TEN + &*ONE,
+            ),
+        }
     }
+
+    find_max_cycle0(ps, BigUint::from(11_u32))
 }
