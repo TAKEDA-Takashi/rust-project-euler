@@ -1,4 +1,4 @@
-use num::{one, range, zero, FromPrimitive, Integer, ToPrimitive};
+use num::{one, range, range_inclusive, zero, FromPrimitive, Integer, ToPrimitive};
 
 use std::string::ToString;
 
@@ -56,6 +56,18 @@ where
     }
 }
 
+pub fn get_divisors<T>(n: &T) -> Vec<T>
+where
+    T: Integer + FromPrimitive + ToPrimitive + Clone,
+{
+    range_inclusive(one(), n.clone() / T::from_u32(2).unwrap()).fold(vec![], |mut acc, m| {
+        if n.clone() % m.clone() == zero() {
+            acc.push(m.clone());
+        }
+        acc
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -87,5 +99,13 @@ mod tests {
         assert_eq!(21, combination(&7, &2));
         assert_eq!(1, combination(&4, &4));
         assert_eq!(120, combination(&10, &3));
+    }
+
+    #[test]
+    fn test_get_divisors() {
+        assert_eq!(vec![1, 2, 3], get_divisors(&6));
+        assert_eq!(vec![1], get_divisors(&5));
+        assert_eq!(vec![1, 2, 4], get_divisors(&8));
+        assert_eq!(vec![1, 2, 3, 6, 9], get_divisors(&18));
     }
 }
