@@ -19,8 +19,8 @@
 //!
 //! では, 500個より多く約数をもつ最初の三角数はいくつか.
 
+use euler_lib::Prime;
 use itertools::Itertools;
-use problem_012::PrimeFactorization;
 
 fn get_triangular_number(n: usize) -> (usize, usize, usize) {
     if n % 2 == 0 {
@@ -42,14 +42,14 @@ fn divisor_count(ps: &Vec<usize>) -> usize {
 
 fn main() {
     let find_div_count = 500;
-    let mut prime_factorization = PrimeFactorization::new();
+    let mut prime = Prime::new();
 
     let tri = (1..)
         .map(|n| get_triangular_number(n))
         .find(|(a, b, _)| {
             let mut ps = vec![];
-            ps.extend(prime_factorization.exec(*a));
-            ps.extend(prime_factorization.exec(*b));
+            ps.extend(prime.factorization(a));
+            ps.extend(prime.factorization(b));
 
             ps.sort();
 
