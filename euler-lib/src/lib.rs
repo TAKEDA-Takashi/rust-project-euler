@@ -46,6 +46,15 @@ where
             index: 0,
         }
     }
+
+    pub fn is_prime(&mut self, n: &T) -> bool {
+        if *n <= one() {
+            return false;
+        }
+
+        let f = self.factorization(n);
+        f.len() == 1
+    }
 }
 
 fn prime_factorization<T>(

@@ -1,5 +1,5 @@
-use num::{one, range, range_inclusive, zero, FromPrimitive, Integer, ToPrimitive};
-
+use num::bigint::{RandBigInt, ToBigUint};
+use num::{one, range, range_inclusive, zero, BigUint, FromPrimitive, Integer, ToPrimitive};
 use std::string::ToString;
 
 pub fn is_palindrome<T: ToString>(n: &T) -> bool {
@@ -68,6 +68,79 @@ where
     })
 }
 
+const MILLER_RABIN_ROUND: usize = 20;
+
+pub fn is_prime<T>(n: &T) -> bool
+where
+    T: Integer
+        + FromPrimitive
+        + ToBigUint
+        + std::ops::Shr<Output = T>
+        + std::ops::BitAnd<Output = T>
+        + Clone,
+{
+    if n.clone() == T::from_u32(2_u32).unwrap() || n.clone() == T::from_u32(3_u32).unwrap() {
+        true
+    } else if n.clone() < T::from_u32(2_u32).unwrap()
+        || n.clone() % T::from_u32(2_u32).unwrap() == zero()
+    {
+        false
+    } else {
+        miller_rabin_test(n)
+    }
+}
+
+// nが奇素数 =>
+//   ∃d ∈ N ∧ odd(d), ∃s ∈ Z s.t. n - 1 == 2^s * d. ∀a ∈ [2, n - 2]. ∃r ∈ Z ∧ 0 <= r < s.
+//   a^d % n == 1 または a^((2^r)*d) % n == -1 i.e. (a^d)^(2^r) % n == -1
+//   のいずれかが成り立つ
+fn miller_rabin_test<T>(n: &T) -> bool
+where
+    T: Integer
+        + FromPrimitive
+        + ToBigUint
+        + std::ops::Shr<Output = T>
+        + std::ops::BitAnd<Output = T>
+        + Clone,
+{
+    let (d, s) = find_odd(n.clone() - one());
+
+    let mut rng = rand::thread_rng();
+
+    (0..MILLER_RABIN_ROUND).all(move |_| {
+        let a = rng.gen_biguint_range(
+            &BigUint::from(2_u32),
+            &(n.clone() - T::from_u32(2).unwrap()).to_biguint().unwrap(),
+        );
+
+        let n = n.to_biguint().unwrap();
+        let y = a.modpow(&d.to_biguint().unwrap(), &n);
+        if y == one() {
+            // a^d % n == 1
+            true
+        } else {
+            // ∃r ∈ Z ∧ 0 <= r < s. (a^d)^(2^r) % n == -1
+            // (0_u32..s).any(|r| modpow(y.clone(), 2_u32.pow(r), n.clone()) == &n - one::<BigUint>())
+            (0_u32..s).any(|r| y.modpow(&BigUint::from(2_u32).pow(r), &n) == &n - one::<BigUint>())
+        }
+    })
+}
+
+fn find_odd<T>(q: T) -> (T, u32)
+where
+    T: Integer + std::ops::Shr<Output = T> + std::ops::BitAnd<Output = T> + Clone,
+{
+    let mut s: u32 = 0;
+    let mut q = q.clone();
+
+    while q.clone() & one() == one() {
+        q = q >> one();
+        s += 1;
+    }
+
+    (q, s)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -107,5 +180,13 @@ mod tests {
         assert_eq!(vec![1], get_divisors(&5));
         assert_eq!(vec![1, 2, 4], get_divisors(&8));
         assert_eq!(vec![1, 2, 3, 6, 9], get_divisors(&18));
+    }
+
+    #[test]
+    fn test_is_prime() {
+        assert!(is_prime(&9999991));
+        assert!(is_prime(&9007199254740997_u64));
+        assert!(!is_prime(&106330));
+        assert!(!is_prime(&8635844967113809_u64));
     }
 }
