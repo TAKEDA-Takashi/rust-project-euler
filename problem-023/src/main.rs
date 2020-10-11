@@ -8,6 +8,7 @@
 //!
 //! 2つの過剰数の和で書き表せない正の整数の総和を求めよ.
 
+use euler_lib::get_divisors;
 use std::collections::HashSet;
 use std::iter::repeat;
 
@@ -29,15 +30,5 @@ fn main() {
 }
 
 fn is_abundant_number(n: &usize) -> bool {
-    get_divisor(*n).iter().sum::<usize>() > *n
-}
-
-// Same problem-021
-fn get_divisor(n: usize) -> Vec<usize> {
-    (1..=n / 2).fold(vec![], |mut acc, m| {
-        if n % m == 0 {
-            acc.push(m);
-        }
-        acc
-    })
+    get_divisors(n).iter().sum::<usize>() > *n
 }
