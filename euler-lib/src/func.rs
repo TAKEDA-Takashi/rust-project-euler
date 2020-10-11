@@ -1,4 +1,5 @@
-use num::{one, zero, Integer};
+use num::{one, range, zero, FromPrimitive, Integer, ToPrimitive};
+
 use std::string::ToString;
 
 pub fn is_palindrome<T: ToString>(n: &T) -> bool {
@@ -38,6 +39,21 @@ where
     }
 
     combination(n, &(r.clone() - one())) * (n.clone() - r.clone() + one()) / r.clone()
+}
+
+pub fn factorial<T>(n: &T) -> T
+where
+    T: Integer + FromPrimitive + ToPrimitive + Clone,
+{
+    let o: T = one();
+
+    if *n == zero() {
+        o.clone()
+    } else if *n == o {
+        o.clone()
+    } else {
+        range(T::from_u32(2).unwrap(), n.clone()).fold(n.clone(), |acc, m| acc * m)
+    }
 }
 
 #[cfg(test)]
