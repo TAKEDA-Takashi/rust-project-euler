@@ -8,13 +8,15 @@
 //!
 //! それでは10000未満の友愛数の和を求めよ.
 
+use euler_lib::get_divisors;
+
 fn main() {
     print!(
         "{}",
         (2..10000)
             .filter_map(|n| {
-                let div_sum = get_divisor(n).iter().sum();
-                let div_sum_rev = get_divisor(div_sum).iter().sum();
+                let div_sum = get_divisors(&n).iter().sum();
+                let div_sum_rev = get_divisors(&div_sum).iter().sum();
 
                 if n != div_sum && n == div_sum_rev {
                     Some(n)
@@ -24,13 +26,4 @@ fn main() {
             })
             .sum::<usize>()
     );
-}
-
-fn get_divisor(n: usize) -> Vec<usize> {
-    (1..=n / 2).fold(vec![], |mut acc, m| {
-        if n % m == 0 {
-            acc.push(m);
-        }
-        acc
-    })
 }
