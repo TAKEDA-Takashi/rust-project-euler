@@ -21,12 +21,13 @@
 //!
 //! 1000桁になる最初の項の番号を答えよ.
 
-use problem_025::Fibo;
+use euler_lib::fibo_iter;
+use num_bigint::BigUint;
 
 fn main() {
     println!(
         "{}",
-        Fibo::new()
+        fibo_iter::<BigUint>()
             .enumerate()
             .find(|(_, f)| f.to_string().len() == 1000)
             .unwrap()
