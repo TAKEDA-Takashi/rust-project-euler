@@ -128,6 +128,41 @@ where
     }
 }
 
+#[derive(Debug)]
+pub struct Fibo<T> {
+    current: Option<T>,
+    prev: Option<T>,
+}
+
+impl<T> Iterator for Fibo<T>
+where
+    T: Integer + Clone,
+{
+    type Item = T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let c = self.current.take();
+
+        self.current = c
+            .as_ref()
+            .zip(self.prev.as_ref())
+            .map(|(a, b)| a.clone() + b.clone());
+        self.prev = c.clone();
+
+        c
+    }
+}
+
+pub fn fibo_iter<T>() -> Fibo<T>
+where
+    T: Integer + Clone,
+{
+    Fibo {
+        current: Some(one::<T>()),
+        prev: Some(zero::<T>()),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -154,5 +189,17 @@ mod tests {
         assert_eq!(Some(BigUint::from(5_u32)), prime_iter.next());
         assert_eq!(Some(BigUint::from(7_u32)), prime_iter.next());
         assert_eq!(Some(BigUint::from(11_u32)), prime_iter.next());
+    }
+
+    #[test]
+    fn fibo() {
+        let mut fibo = fibo_iter::<usize>();
+
+        assert_eq!(Some(1), fibo.next());
+        assert_eq!(Some(1), fibo.next());
+        assert_eq!(Some(2), fibo.next());
+        assert_eq!(Some(3), fibo.next());
+        assert_eq!(Some(5), fibo.next());
+        assert_eq!(Some(8), fibo.next());
     }
 }
