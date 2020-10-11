@@ -4,14 +4,8 @@
 //!
 //! では, 20×20 のマス目ではいくつのルートがあるか.
 
-fn combination(n: usize, r: usize) -> usize {
-    if r == 0 {
-        return 1;
-    }
-
-    combination(n, r - 1) * (n - r + 1) / r
-}
+use euler_lib::combination;
 
 fn main() {
-    println!("{}", combination(40, 20));
+    println!("{}", combination(&40_u64, &20));
 }
