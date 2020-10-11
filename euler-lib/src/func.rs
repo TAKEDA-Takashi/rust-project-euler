@@ -1,4 +1,4 @@
-use num::{zero, Integer};
+use num::{one, zero, Integer};
 use std::string::ToString;
 
 pub fn is_palindrome<T: ToString>(n: &T) -> bool {
@@ -29,6 +29,17 @@ where
     }
 }
 
+pub fn combination<T>(n: &T, r: &T) -> T
+where
+    T: Integer + Clone,
+{
+    if *r == zero() {
+        return one();
+    }
+
+    combination(n, &(r.clone() - one())) * (n.clone() - r.clone() + one()) / r.clone()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -52,5 +63,13 @@ mod tests {
         assert_eq!(1, gcd(&11, &19));
         assert_eq!(5, gcd(&10, &25));
         assert_eq!(4, gcd(&20, &8));
+    }
+
+    #[test]
+    fn test_combination() {
+        assert_eq!(6, combination(&6, &1));
+        assert_eq!(21, combination(&7, &2));
+        assert_eq!(1, combination(&4, &4));
+        assert_eq!(120, combination(&10, &3));
     }
 }
