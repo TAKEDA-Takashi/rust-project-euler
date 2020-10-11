@@ -1,4 +1,4 @@
-use num::Integer;
+use num::{zero, Integer};
 use std::string::ToString;
 
 pub fn is_palindrome<T: ToString>(n: &T) -> bool {
@@ -18,6 +18,17 @@ where
     }
 }
 
+pub fn gcd<T>(a: &T, b: &T) -> T
+where
+    T: Integer + Clone,
+{
+    if *b == zero() {
+        a.clone()
+    } else {
+        gcd(b, &(a.clone() % b.clone()))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -33,5 +44,13 @@ mod tests {
     fn test_mul_palindrome() {
         assert_eq!(Some((11, 11, 121)), mul_palindrome(&(11, 11)));
         assert_eq!(None, mul_palindrome(&(11, 12)));
+    }
+
+    #[test]
+    fn test_gcd() {
+        assert_eq!(4, gcd(&4, &12));
+        assert_eq!(1, gcd(&11, &19));
+        assert_eq!(5, gcd(&10, &25));
+        assert_eq!(4, gcd(&20, &8));
     }
 }
