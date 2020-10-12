@@ -9,12 +9,15 @@
 //!
 //! 100万未満の素数を連続する素数の和で表したときに最長になるのはどの素数か?
 
-use problem_050::Prime;
+use euler_lib::Prime;
 use std::collections::HashSet;
 
 fn main() {
     let upper_bound = 1_000_000;
-    let prime_list: Vec<usize> = Prime::new().take_while(|&p| p < upper_bound).collect();
+    let prime_list: Vec<usize> = Prime::new()
+        .iter()
+        .take_while(|&p| p < upper_bound)
+        .collect();
     let prime_set: HashSet<&usize> = prime_list.iter().collect();
 
     let (.., max_prime, _max_len) = (0..prime_list.len())
