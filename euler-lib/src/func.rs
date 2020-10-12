@@ -1,9 +1,13 @@
 use num::bigint::{RandBigInt, ToBigUint};
 use num::{one, range, range_inclusive, zero, BigUint, FromPrimitive, Integer, ToPrimitive};
-use std::string::ToString;
 
-pub fn is_palindrome<T: ToString>(n: &T) -> bool {
+pub fn is_palindrome<T: std::string::ToString>(n: &T) -> bool {
     let s = n.to_string();
+    s == s.chars().rev().collect::<String>()
+}
+
+pub fn is_binary_palindrome<T: std::fmt::Binary>(n: &T) -> bool {
+    let s = format!("{:b}", n);
     s == s.chars().rev().collect::<String>()
 }
 
@@ -150,6 +154,13 @@ mod tests {
         assert!(is_palindrome(&110011));
         assert!(is_palindrome(&12321));
         assert!(!is_palindrome(&123456));
+    }
+
+    #[test]
+    fn test_is_binary_palindrome() {
+        assert!(is_binary_palindrome(&0b110011));
+        assert!(is_binary_palindrome(&0b10101010101));
+        assert!(!is_binary_palindrome(&0b11000));
     }
 
     #[test]
