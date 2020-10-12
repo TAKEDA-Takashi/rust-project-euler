@@ -13,40 +13,20 @@
 //!
 //! 最初に現れるそれぞれ4つの異なる素因数を持つ連続する4つの数を求めよ. その最初の数はいくつか?
 
+use euler_lib::Prime;
 use itertools::Itertools;
-use problem_047::PrimeFactorization;
 use std::collections::HashSet;
 
 fn main() {
-    let mut prime_factorization = PrimeFactorization::new();
+    let mut prime = Prime::new();
 
     let w = (120..)
         .tuple_windows()
-        .find(|&(a, b, c, d)| {
-            prime_factorization
-                .exec(a)
-                .iter()
-                .collect::<HashSet<_>>()
-                .len()
-                == 4
-                && prime_factorization
-                    .exec(b)
-                    .iter()
-                    .collect::<HashSet<_>>()
-                    .len()
-                    == 4
-                && prime_factorization
-                    .exec(c)
-                    .iter()
-                    .collect::<HashSet<_>>()
-                    .len()
-                    == 4
-                && prime_factorization
-                    .exec(d)
-                    .iter()
-                    .collect::<HashSet<_>>()
-                    .len()
-                    == 4
+        .find(|(a, b, c, d)| {
+            prime.factorization(a).iter().collect::<HashSet<_>>().len() == 4
+                && prime.factorization(b).iter().collect::<HashSet<_>>().len() == 4
+                && prime.factorization(c).iter().collect::<HashSet<_>>().len() == 4
+                && prime.factorization(d).iter().collect::<HashSet<_>>().len() == 4
         })
         .unwrap();
 
