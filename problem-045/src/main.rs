@@ -11,12 +11,12 @@
 
 // a ∈ 六角数 => a ∈ 三角数
 
-use problem_045::Intersect;
+use euler_lib::iter_intersect;
 
 fn main() {
     println!(
         "{}",
-        Intersect::new(
+        iter_intersect(
             (1..).map(|n: usize| n * (3 * n - 1) / 2),
             (1..).map(|n: usize| n * (2 * n - 1)),
         )
