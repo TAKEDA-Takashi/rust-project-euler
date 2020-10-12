@@ -12,6 +12,14 @@
 //! n2 + an + b
 //! n = 0 から始めて連続する整数で素数を生成したときに最長の長さとなる上の二次式の, 係数 a, b の積を答えよ.
 
+use euler_lib::Prime;
+use lazy_static::lazy_static;
+use std::sync::Mutex;
+
+lazy_static! {
+    static ref PRIME: Mutex<Prime<isize>> = Mutex::new(Prime::new());
+}
+
 fn main() {
     let (a, b) = find_longest_prime_gen(get_quadratic_function()).unwrap();
     println!("{}", a * b);
@@ -20,23 +28,23 @@ fn main() {
 fn find_longest_prime_gen(
     v: Vec<(Box<dyn Fn(isize) -> isize>, isize, isize)>,
 ) -> Option<(isize, isize)> {
-    find_longest_prime_gen0(v, 0)
-}
-
-fn find_longest_prime_gen0(
-    v: Vec<(Box<dyn Fn(isize) -> isize>, isize, isize)>,
-    n: isize,
-) -> Option<(isize, isize)> {
-    match v.len() {
-        0 => None,
-        1 => Some((v[0].1, v[0].2)),
-        _ => find_longest_prime_gen0(
-            v.into_iter()
-                .filter(|(f, ..)| is_prime(f.as_ref()(n)))
-                .collect(),
-            n + 1,
-        ),
+    fn find_longest_prime_gen0(
+        v: Vec<(Box<dyn Fn(isize) -> isize>, isize, isize)>,
+        n: isize,
+    ) -> Option<(isize, isize)> {
+        match v.len() {
+            0 => None,
+            1 => Some((v[0].1, v[0].2)),
+            _ => find_longest_prime_gen0(
+                v.into_iter()
+                    .filter(|(f, ..)| PRIME.lock().unwrap().is_prime(&f.as_ref()(n)))
+                    .collect(),
+                n + 1,
+            ),
+        }
     }
+
+    find_longest_prime_gen0(v, 0)
 }
 
 fn get_quadratic_function() -> Vec<(Box<dyn Fn(isize) -> isize>, isize, isize)> {
@@ -49,18 +57,4 @@ fn get_quadratic_function() -> Vec<(Box<dyn Fn(isize) -> isize>, isize, isize)> 
     }
 
     v
-}
-
-fn is_prime(n: isize) -> bool {
-    if n == 2 {
-        return true;
-    }
-
-    if n < 2 || n % 2 == 0 {
-        return false;
-    }
-
-    (3..=((n as f64).sqrt() as isize))
-        .step_by(2)
-        .all(|p| n % p != 0)
 }
