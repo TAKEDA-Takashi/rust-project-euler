@@ -6,6 +6,7 @@
 //!
 //! p ≤ 1000 のとき解の数が最大になる p はいくつか?
 
+use euler_lib::gcd;
 use itertools::Itertools;
 use std::iter::repeat;
 
@@ -40,7 +41,7 @@ fn main() {
 fn primitive_pythagorean_triple(m: usize, n: usize) -> Option<(usize, usize, usize)> {
     assert!(m > n);
 
-    if (m - n) % 2 != 1 || gcd(m, n) != 1 {
+    if (m - n) % 2 != 1 || gcd(&m, &n) != 1 {
         return None;
     }
 
@@ -52,14 +53,5 @@ fn primitive_pythagorean_triple(m: usize, n: usize) -> Option<(usize, usize, usi
         Some((a, b, c))
     } else {
         Some((b, a, c))
-    }
-}
-
-// Same problem-005
-fn gcd(a: usize, b: usize) -> usize {
-    if b == 0 {
-        a
-    } else {
-        gcd(b, a % b)
     }
 }
