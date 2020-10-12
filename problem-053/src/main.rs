@@ -11,6 +11,7 @@
 //!
 //! 1 ≤ n ≤ 100 について, 100万を超える nCr は何通りあるか?
 
+use euler_lib::combination;
 use std::iter::repeat;
 
 fn main() {
@@ -18,15 +19,7 @@ fn main() {
         "{}",
         (1..=100)
             .flat_map(|n| repeat(n).zip(0..=n))
-            .filter(|&(n, r)| combination(n, r) > 1_000_000)
+            .filter(|&(n, r)| combination::<u128>(&n, &r) > 1_000_000)
             .count()
     );
-}
-
-fn combination(n: u128, r: u128) -> u128 {
-    if r == 0 {
-        return 1;
-    }
-
-    combination(n, r - 1) * (n - r + 1) / r
 }
