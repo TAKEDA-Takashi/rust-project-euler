@@ -15,7 +15,7 @@
 
 // 問題28に似てる
 
-use problem_058::is_prime;
+use euler_lib::is_prime;
 
 fn main() {
     println!("{}", 2 * find_under_ten_per() - 1);
@@ -30,7 +30,7 @@ fn find_under_ten_per() -> usize {
                 prime_count
                     + get_edge_number(term + 1)
                         .iter()
-                        .filter(|&&m| is_prime(m))
+                        .filter(|m| is_prime(*m))
                         .count(),
                 count + 4,
                 term + 1,
