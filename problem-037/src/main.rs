@@ -6,11 +6,12 @@
 //!
 //! 注: 2, 3, 5, 7を切り詰め可能な素数とは考えない.
 
-use problem_037::Prime;
+use euler_lib::Prime;
 use std::collections::BTreeSet;
 
 fn main() {
-    let mut prime_iter = Prime::new();
+    let mut prime = Prime::new();
+    let mut prime_iter = prime.iter();
     let mut prime_set: BTreeSet<usize> = prime_iter.by_ref().take(4).collect();
     let mut v = vec![];
 
