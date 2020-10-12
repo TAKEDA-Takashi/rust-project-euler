@@ -6,13 +6,16 @@
 //!
 //! 桁を同じ数で置き換えることで8つの素数が得られる最小の素数を求めよ. (注:連続した桁でなくても良い)
 
+use euler_lib::Prime;
 use itertools::Itertools;
-use problem_051::is_prime;
+use std::cell::RefCell;
 
 fn main() {
+    let prime = RefCell::new(Prime::new());
+
     let (prime, _) = (11..)
         .step_by(2)
-        .filter(|&n| is_prime(n))
+        .filter(|&n| prime.borrow_mut().is_prime(&n))
         .map(|p| (p, (p as f64).log10() as usize + 1))
         .flat_map(|(p, digit)| {
             (1..digit)
@@ -27,7 +30,7 @@ fn main() {
                         p,
                         (0..=9 - base_number)
                             .filter(|a| {
-                                is_prime(rep.iter().fold(p, |acc, j| {
+                                prime.borrow_mut().is_prime(&rep.iter().fold(p, |acc, j| {
                                     acc + a * 10_usize.pow((digit - j - 1) as u32)
                                 }))
                             })
