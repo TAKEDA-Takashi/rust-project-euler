@@ -23,6 +23,8 @@
 //!
 //! 注: 2007/04/24にLychrel数の理論的な性質を強調するために文面が修正された.
 
+use euler_lib::is_palindrome;
+
 const LYCHREL_ROUND: u32 = 50;
 
 fn main() {
@@ -43,7 +45,7 @@ fn is_lychrel(n: &u128) -> bool {
                 .unwrap();
             let next = n + rev;
 
-            if is_palindrome(next) {
+            if is_palindrome(&next) {
                 false
             } else {
                 is_lychrel0(&next, r + 1)
@@ -52,9 +54,4 @@ fn is_lychrel(n: &u128) -> bool {
     }
 
     is_lychrel0(n, 0)
-}
-
-fn is_palindrome(n: u128) -> bool {
-    let s = n.to_string();
-    s == s.chars().rev().collect::<String>()
 }
