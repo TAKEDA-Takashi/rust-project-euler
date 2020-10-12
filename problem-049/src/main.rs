@@ -8,12 +8,13 @@
 //!
 //! それではこの数列の3つの項を連結した12桁の数を求めよ.
 
+use euler_lib::Prime;
 use itertools::Itertools;
-use problem_049::Prime;
 use std::collections::BTreeSet;
 
 fn main() {
     let set: BTreeSet<usize> = Prime::new()
+        .iter()
         .skip_while(|&p| p < 1000)
         .take_while(|&p| p < 10000)
         .collect();
