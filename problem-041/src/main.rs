@@ -8,8 +8,8 @@
 
 // パンデジタル数の定義から8桁と9桁の素数のパンデジタル数は存在しない（必ず3の倍数になる）
 
+use euler_lib::is_prime;
 use itertools::Itertools;
-use problem_041::is_prime;
 
 fn main() {
     println!(
@@ -17,7 +17,7 @@ fn main() {
         (1..=7)
             .permutations(7)
             .filter_map(|v| { v.iter().join("").parse::<usize>().ok() })
-            .filter(|&n| is_prime(n))
+            .filter(|&n| is_prime(&n))
             .max()
             .unwrap()
     );
