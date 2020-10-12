@@ -6,11 +6,11 @@
 //!
 //! 100万未満の巡回素数はいくつあるか?
 
-use problem_035::Prime;
+use euler_lib::Prime;
 use std::collections::{HashSet, VecDeque};
 
 fn main() {
-    let prime_set: HashSet<usize> = Prime::new().take_while(|&p| p < 1_000_000).collect();
+    let prime_set: HashSet<usize> = Prime::new().iter().take_while(|&p| p < 1_000_000).collect();
     let mut correct_set: HashSet<usize> = HashSet::new();
 
     for p in &prime_set {
