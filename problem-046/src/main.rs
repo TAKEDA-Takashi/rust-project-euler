@@ -13,7 +13,7 @@
 //!
 //! 平方数の2倍と素数の和で表せない最小の奇合成数はいくつか?
 
-use problem_046::Prime;
+use euler_lib::Prime;
 use std::collections::HashSet;
 
 fn main() {
@@ -21,6 +21,7 @@ fn main() {
     let mut odd_iter = (3..).step_by(2);
 
     let (o, ..) = Prime::new()
+        .iter()
         .skip(1)
         .filter_map(|p| {
             odd_composite_set.extend((1..p).map(|n| p + 2 * n * n));
