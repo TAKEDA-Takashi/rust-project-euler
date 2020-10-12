@@ -6,21 +6,13 @@
 //!
 //! (注: 先頭に0を含めて回文にすることは許されない.)
 
+use euler_lib::{is_binary_palindrome, is_palindrome};
+
 fn main() {
     println!(
         "{}",
         (1..1_000_000)
-            .filter(|&n| is_palindrome(n) && is_binary_palindrome(n))
+            .filter(|n| is_palindrome(n) && is_binary_palindrome(n))
             .sum::<usize>()
     );
-}
-
-fn is_palindrome(n: usize) -> bool {
-    let s = n.to_string();
-    s == s.chars().rev().collect::<String>()
-}
-
-fn is_binary_palindrome(n: usize) -> bool {
-    let s = format!("{:b}", n);
-    s == s.chars().rev().collect::<String>()
 }
