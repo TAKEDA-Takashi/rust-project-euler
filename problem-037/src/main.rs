@@ -18,7 +18,7 @@ fn main() {
     for p in prime_iter {
         prime_set.insert(p);
 
-        if is_prime_left_pad(p, &prime_set) && is_prime_right_pad(p, &prime_set) {
+        if is_prime_left_trim(&p, &prime_set) && is_prime_right_trim(&p, &prime_set) {
             v.push(p);
 
             // 11個見つける
@@ -31,7 +31,7 @@ fn main() {
     println!("{}", v.iter().sum::<usize>());
 }
 
-fn is_prime_left_pad(n: usize, prime_set: &BTreeSet<usize>) -> bool {
+fn is_prime_left_trim(n: &usize, prime_set: &BTreeSet<usize>) -> bool {
     match n % 10 {
         1 | 9 => false,
         _ => {
@@ -50,7 +50,7 @@ fn is_prime_left_pad(n: usize, prime_set: &BTreeSet<usize>) -> bool {
     }
 }
 
-fn is_prime_right_pad(n: usize, prime_set: &BTreeSet<usize>) -> bool {
+fn is_prime_right_trim(n: &usize, prime_set: &BTreeSet<usize>) -> bool {
     match &n.to_string()[..1] {
         "1" | "4" | "6" | "8" | "9" => false,
         _ => {
