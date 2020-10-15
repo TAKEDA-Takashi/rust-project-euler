@@ -1,5 +1,5 @@
 use num::bigint::{RandBigInt, ToBigUint};
-use num::{one, range, range_inclusive, zero, BigUint, FromPrimitive, Integer, ToPrimitive};
+use num::{one, range, range_inclusive, zero, BigUint, FromPrimitive, Integer, One, ToPrimitive};
 
 pub fn is_palindrome<T: std::string::ToString>(n: &T) -> bool {
     let s = n.to_string();
@@ -79,15 +79,14 @@ where
     T: Integer
         + FromPrimitive
         + ToBigUint
-        + std::ops::Shr<Output = T>
+        + std::ops::Shr<usize, Output = T>
         + std::ops::BitAnd<Output = T>
+        + std::cmp::Eq
         + Clone,
 {
-    if n.clone() == T::from_u32(2_u32).unwrap() || n.clone() == T::from_u32(3_u32).unwrap() {
+    if n == &T::from_u32(2_u32).unwrap() || n == &T::from_u32(3_u32).unwrap() {
         true
-    } else if n.clone() < T::from_u32(2_u32).unwrap()
-        || n.clone() % T::from_u32(2_u32).unwrap() == zero()
-    {
+    } else if n < &T::from_u32(2_u32).unwrap() || n.is_even() {
         false
     } else {
         miller_rabin_test(n)
@@ -103,7 +102,7 @@ where
     T: Integer
         + FromPrimitive
         + ToBigUint
-        + std::ops::Shr<Output = T>
+        + std::ops::Shr<usize, Output = T>
         + std::ops::BitAnd<Output = T>
         + Clone,
 {
@@ -111,15 +110,16 @@ where
 
     let mut rng = rand::thread_rng();
 
-    (0..MILLER_RABIN_ROUND).all(move |_| {
-        let a = rng.gen_biguint_range(
-            &BigUint::from(2_u32),
-            &(n.clone() - T::from_u32(2).unwrap()).to_biguint().unwrap(),
-        );
+    let n = n.to_biguint().unwrap();
+    let d = d.to_biguint().unwrap();
+    let lbound = BigUint::from(2_u32);
+    let ubound = &n - BigUint::from(2_u32);
 
-        let n = n.to_biguint().unwrap();
-        let y = a.modpow(&d.to_biguint().unwrap(), &n);
-        if y == one() {
+    (0..MILLER_RABIN_ROUND).all(move |_| {
+        let a = rng.gen_biguint_range(&lbound, &ubound);
+
+        let y = a.modpow(&d, &n);
+        if y.is_one() {
             // a^d % n == 1
             true
         } else {
@@ -132,13 +132,13 @@ where
 
 fn find_odd<T>(q: T) -> (T, u32)
 where
-    T: Integer + std::ops::Shr<Output = T> + std::ops::BitAnd<Output = T> + Clone,
+    T: Integer + std::ops::Shr<usize, Output = T> + std::ops::BitAnd<Output = T> + Clone,
 {
     let mut s: u32 = 0;
     let mut q = q.clone();
 
-    while q.clone() & one() == one() {
-        q = q >> one();
+    while (q.clone() & one()).is_one() {
+        q = q >> 1;
         s += 1;
     }
 
@@ -198,6 +198,7 @@ mod tests {
         assert!(is_prime(&9999991));
         assert!(is_prime(&9007199254740997_u64));
         assert!(!is_prime(&106330));
-        assert!(!is_prime(&8635844967113809_u64));
+        assert!(!is_prime(&8635844967113809_u128));
+        assert!(is_prime(&BigUint::from_u64(9007199254740997).unwrap()));
     }
 }
