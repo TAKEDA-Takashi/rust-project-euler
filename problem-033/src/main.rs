@@ -8,8 +8,8 @@
 //!
 //! その4個の分数の積が約分された形で与えられたとき, 分母の値を答えよ.
 
-use euler_lib::gcd;
 use itertools::Itertools;
+use num_integer::Integer;
 use std::collections::HashSet;
 
 fn main() {
@@ -19,7 +19,7 @@ fn main() {
             .tuple_combinations()
             .filter(|(m, d)| m % 10 != 0 && d % 10 != 0) // trivial and either ten multiple
             .filter_map(|(m, d)| {
-                let g = gcd(&m, &d);
+                let g = m.gcd(&d);
                 if g == 1 {
                     return None;
                 }
@@ -47,7 +47,7 @@ fn main() {
             .fold((1, 1), |acc, f| {
                 let m = acc.0 * f.0;
                 let d = acc.1 * f.1;
-                (m / gcd(&m, &d), d / gcd(&m, &d))
+                (m / m.gcd(&d), d / m.gcd(&d))
             })
             .1 // 分母
     );

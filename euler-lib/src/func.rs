@@ -1,5 +1,5 @@
 use num::bigint::{RandBigInt, ToBigUint};
-use num::{one, range, range_inclusive, zero, BigUint, FromPrimitive, Integer, One, ToPrimitive};
+use num::{one, range, range_inclusive, BigUint, FromPrimitive, Integer, One, ToPrimitive};
 
 pub fn is_palindrome<T: std::string::ToString>(n: &T) -> bool {
     let s = n.to_string();
@@ -23,22 +23,11 @@ where
     }
 }
 
-pub fn gcd<T>(a: &T, b: &T) -> T
-where
-    T: Integer + Clone,
-{
-    if *b == zero() {
-        a.clone()
-    } else {
-        gcd(b, &(a.clone() % b.clone()))
-    }
-}
-
 pub fn combination<T>(n: &T, r: &T) -> T
 where
     T: Integer + Clone,
 {
-    if *r == zero() {
+    if r.is_zero() {
         return one();
     }
 
@@ -51,7 +40,7 @@ where
 {
     let o: T = one();
 
-    if *n == zero() {
+    if n.is_zero() {
         o.clone()
     } else if *n == o {
         o.clone()
@@ -65,7 +54,7 @@ where
     T: Integer + FromPrimitive + ToPrimitive + Clone,
 {
     range_inclusive(one(), n.clone() / T::from_u32(2).unwrap()).fold(vec![], |mut acc, m| {
-        if n.clone() % m.clone() == zero() {
+        if (n.clone() % m.clone()).is_zero() {
             acc.push(m.clone());
         }
         acc
@@ -167,14 +156,6 @@ mod tests {
     fn test_mul_palindrome() {
         assert_eq!(Some((11, 11, 121)), mul_palindrome(&(11, 11)));
         assert_eq!(None, mul_palindrome(&(11, 12)));
-    }
-
-    #[test]
-    fn test_gcd() {
-        assert_eq!(4, gcd(&4, &12));
-        assert_eq!(1, gcd(&11, &19));
-        assert_eq!(5, gcd(&10, &25));
-        assert_eq!(4, gcd(&20, &8));
     }
 
     #[test]
