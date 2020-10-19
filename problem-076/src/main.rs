@@ -19,10 +19,9 @@ fn counting_summations(n: &usize) -> usize {
     fn counting_summation0(n: usize, head: usize) -> usize {
         if head == 1 || n < 2 {
             1
-        } else if n < head {
-            counting_summation0(n, n)
         } else {
-            counting_summation0(n, head - 1) + counting_summation0(n - head, head)
+            let residue = n - head;
+            counting_summation0(n, head - 1) + counting_summation0(residue, residue.min(head))
         }
     }
 
