@@ -11,7 +11,7 @@ use num_integer::Integer;
 use std::iter::repeat;
 
 fn main() {
-    let mut v: Vec<usize> = (2..23) // mは23が上界; m(m+1) <= 500
+    let v = (2..23) // mは23が上界; m(m+1) <= 500
         .flat_map(|m| repeat(m).zip(1..m))
         .filter_map(|(m, n)| primitive_pythagorean_triple(m, n))
         // 原始ピタゴラス数と相似な直角三角形を列挙
@@ -21,10 +21,8 @@ fn main() {
                 .map(|(n, p)| n * p)
                 .take_while(|&p| p <= 1000)
         })
-        .collect();
-
-    // must before group_by
-    v.sort();
+        .sorted()
+        .collect_vec();
 
     println!(
         "{}",
@@ -32,7 +30,7 @@ fn main() {
             .group_by(|&n| n)
             .into_iter()
             .map(|(k, g)| (k, g.count()))
-            .max_by(|(_, c1), (_, c2)| c1.cmp(c2))
+            .max_by_key(|(_, c)| *c)
             .unwrap()
             .0
     )
