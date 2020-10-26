@@ -18,17 +18,17 @@ const DICE_NUM: usize = 2;
 fn main() {
     let dice_table = get_dice_table();
 
-    let mut board_prob: Vec<_> = once(1_f64).chain(repeat(0_f64)).take(BOARD_SISE).collect();
+    let mut board_prob: Vec<_> = once(1.0).chain(repeat(0.0)).take(BOARD_SISE).collect();
 
     for _ in 0..64 {
         let mut bp_updates = vec![];
 
         for current in 0..BOARD_SISE {
-            if board_prob[current] == 0_f64 {
+            if board_prob[current] == 0.0 {
                 continue;
             }
 
-            let mut bp_update = repeat(0_f64).take(BOARD_SISE).collect();
+            let mut bp_update = repeat(0.0).take(BOARD_SISE).collect();
             for dice in &dice_table {
                 update_board(current, dice, 0, &mut bp_update);
             }
@@ -47,12 +47,12 @@ fn main() {
             }
         }
 
-        board_prob = board_prob.iter().map(|p| p / 2_f64).collect();
+        board_prob = board_prob.iter().map(|p| p / 2.0).collect();
     }
 
     // println!("{}", board_prob.iter().sum::<f64>());
     // board_prob.iter().enumerate().for_each(|(n, prob)| {
-    //     println!("{}: {:.4}", n, prob * 100_f64);
+    //     println!("{}: {:.4}", n, prob * 100.0);
     // });
     board_prob
         .iter()
@@ -60,7 +60,7 @@ fn main() {
         .sorted_by(|a, b| PartialOrd::partial_cmp(b.1, a.1).unwrap())
         .take(3)
         .for_each(|(n, prob)| {
-            println!("{}: {:.4}", n, prob * 100_f64);
+            println!("{}: {:.4}", n, prob * 100.0);
         });
 }
 
@@ -89,13 +89,13 @@ fn get_dice_table() -> HashMap<Vec<Vec<usize>>, f64> {
         })
         .map(|v| {
             let prob = if v.len() == 1 {
-                2_f64 / (DICE_SIDE * DICE_SIDE) as f64
+                2.0 / (DICE_SIDE * DICE_SIDE) as f64
             } else if v.len() == 2 {
-                2_f64 / (DICE_SIDE * DICE_SIDE).pow(2) as f64
+                2.0 / (DICE_SIDE * DICE_SIDE).pow(2) as f64
             } else if v[2][0] != v[2][1] {
-                2_f64 / (DICE_SIDE * DICE_SIDE).pow(3) as f64
+                2.0 / (DICE_SIDE * DICE_SIDE).pow(3) as f64
             } else {
-                1_f64 / (DICE_SIDE * DICE_SIDE).pow(3) as f64
+                1.0 / (DICE_SIDE * DICE_SIDE).pow(3) as f64
             };
 
             (v, prob)
@@ -129,27 +129,23 @@ fn update_board(
 fn solve_move_event(next_number: usize) -> Vec<(usize, f64)> {
     match next_number {
         // CC1, CC2, CC3
-        2 | 17 | 33 => vec![
-            (next_number, 7_f64 / 8_f64),
-            (0, 1_f64 / 16_f64),
-            (10, 1_f64 / 16_f64),
-        ],
+        2 | 17 | 33 => vec![(next_number, 7.0 / 8.0), (0, 1.0 / 16.0), (10, 1.0 / 16.0)],
         // CH1, CH2, CH3
         7 | 22 | 36 => vec![
-            (next_number, 3_f64 / 8_f64),
-            (0, 1_f64 / 16_f64),
-            (10, 1_f64 / 16_f64),
-            (11, 1_f64 / 16_f64),
-            (24, 1_f64 / 16_f64),
-            (39, 1_f64 / 16_f64),
-            (5, 1_f64 / 16_f64),
-            (next_r(next_number), 1_f64 / 8_f64),
-            (next_u(next_number), 1_f64 / 16_f64),
-            (next_number - 3, 1_f64 / 16_f64),
+            (next_number, 3.0 / 8.0),
+            (0, 1.0 / 16.0),
+            (10, 1.0 / 16.0),
+            (11, 1.0 / 16.0),
+            (24, 1.0 / 16.0),
+            (39, 1.0 / 16.0),
+            (5, 1.0 / 16.0),
+            (next_r(next_number), 1.0 / 8.0),
+            (next_u(next_number), 1.0 / 16.0),
+            (next_number - 3, 1.0 / 16.0),
         ],
         // G2J
-        30 => vec![(10, 1_f64)],
-        _ => vec![(next_number, 1_f64)],
+        30 => vec![(10, 1.0)],
+        _ => vec![(next_number, 1.0)],
     }
 }
 
