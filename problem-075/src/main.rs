@@ -17,7 +17,7 @@
 //!
 //! 注: この問題は最近変更されました. あなたが正しいパラメータを使っているか確認してください.
 
-use num_integer::Integer;
+use euler_lib::primitive_pythagorean_triple;
 use std::collections::HashSet;
 use std::iter::repeat;
 
@@ -46,22 +46,4 @@ fn main() {
     });
 
     println!("{}", pythagorean_set.len() - common_multiple_set.len());
-}
-
-fn primitive_pythagorean_triple(m: usize, n: usize) -> Option<(usize, usize, usize)> {
-    assert!(m > n);
-
-    if (m - n) % 2 != 1 || m.gcd(&n) != 1 {
-        return None;
-    }
-
-    let a = m * m - n * n;
-    let b = 2 * m * n;
-    let c = m * m + n * n;
-
-    if a < b {
-        Some((a, b, c))
-    } else {
-        Some((b, a, c))
-    }
 }

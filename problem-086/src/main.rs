@@ -9,8 +9,8 @@
 //!
 //! 100万個を超える最小のMを求めよ.
 
+use euler_lib::primitive_pythagorean_triple;
 use itertools::Itertools;
-use num_integer::Integer;
 use std::iter::repeat;
 
 fn main() {
@@ -63,22 +63,4 @@ fn count_shortest_route_with_integer(side_max: usize) -> usize {
             }
         })
         .count()
-}
-
-fn primitive_pythagorean_triple(m: usize, n: usize) -> Option<(usize, usize, usize)> {
-    assert!(m > n);
-
-    if (m - n) % 2 != 1 || m.gcd(&n) != 1 {
-        return None;
-    }
-
-    let a = m * m - n * n;
-    let b = 2 * m * n;
-    let c = m * m + n * n;
-
-    if a < b {
-        Some((a, b, c))
-    } else {
-        Some((b, a, c))
-    }
 }
