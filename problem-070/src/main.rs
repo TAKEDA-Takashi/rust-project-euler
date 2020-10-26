@@ -53,8 +53,8 @@ fn calc_phi(n: &usize, (a, b): &(usize, usize)) -> (usize, f64) {
     let y = *b as f64;
 
     if a == b {
-        (n - a, x / (x - 1_f64))
+        (n - a, x / (x - 1.0))
     } else {
-        ((a - 1) * (b - 1), (x / (x - 1_f64)) * (y / (y - 1_f64)))
+        ((a - 1) * (b - 1), (x / (x - 1.0)) * (y / (y - 1.0)))
     }
 }
