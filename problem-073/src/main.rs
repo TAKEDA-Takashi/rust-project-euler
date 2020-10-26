@@ -14,7 +14,7 @@ use num_integer::Integer;
 fn main() {
     let count: usize = (5..=12000)
         .map(|d| {
-            (((d as f64 / 3_f64).ceil() as usize)..=(d / 2))
+            (((d as f64 / 3.0).ceil() as usize)..=(d / 2))
                 .filter(|n| n.gcd(&d) == 1)
                 .count()
         })
