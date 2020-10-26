@@ -61,6 +61,29 @@ where
     })
 }
 
+pub fn primitive_pythagorean_triple<T>(m: T, n: T) -> Option<(T, T, T)>
+where
+    T: Integer + FromPrimitive + Copy,
+{
+    assert!(m > n);
+
+    let two = T::from_u32(2).unwrap();
+
+    if (m - n) % two != one() || m.gcd(&n) != one() {
+        return None;
+    }
+
+    let a = m * m - n * n;
+    let b = two * m * n;
+    let c = m * m + n * n;
+
+    if a < b {
+        Some((a, b, c))
+    } else {
+        Some((b, a, c))
+    }
+}
+
 const MILLER_RABIN_ROUND: usize = 20;
 
 pub fn is_prime<T>(n: &T) -> bool
@@ -172,6 +195,13 @@ mod tests {
         assert_eq!(vec![1], get_divisors(&5));
         assert_eq!(vec![1, 2, 4], get_divisors(&8));
         assert_eq!(vec![1, 2, 3, 6, 9], get_divisors(&18));
+    }
+
+    #[test]
+    fn test_primitive_pythagorean_triple() {
+        assert_eq!(Some((3, 4, 5)), primitive_pythagorean_triple(2, 1));
+        assert_eq!(Some((5, 12, 13)), primitive_pythagorean_triple(3, 2));
+        assert_eq!(None, primitive_pythagorean_triple(3, 1));
     }
 
     #[test]
