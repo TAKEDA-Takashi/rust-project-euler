@@ -1,7 +1,7 @@
 use num::bigint::{RandBigInt, ToBigUint};
 use num::{one, range, range_inclusive, BigUint, FromPrimitive, Integer, One, ToPrimitive};
 
-pub fn is_palindrome<T: std::string::ToString>(n: &T) -> bool {
+pub fn is_palindrome<T: ToString>(n: &T) -> bool {
     let s = n.to_string();
     s == s.chars().rev().collect::<String>()
 }
@@ -125,7 +125,7 @@ where
     let n = n.to_biguint().unwrap();
     let d = d.to_biguint().unwrap();
     let lbound = BigUint::from(2_u32);
-    let ubound = &n - BigUint::from(2_u32);
+    let ubound = &n - 2_u32;
 
     (0..MILLER_RABIN_ROUND).all(move |_| {
         let a = rng.gen_biguint_range(&lbound, &ubound);
