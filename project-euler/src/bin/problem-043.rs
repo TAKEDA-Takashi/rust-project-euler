@@ -16,20 +16,20 @@
 use itertools::Itertools;
 
 fn main() {
+    let ds = [2, 3, 5, 7, 11, 13, 17];
+
     println!(
         "{}",
         (0..=9)
             .permutations(10)
-            .filter(|p| p[0] != 0)
-            .filter(|p| {
-                &p[1..4].iter().join("").parse().unwrap() % 2 == 0
-                    && &p[2..5].iter().join("").parse().unwrap() % 3 == 0
-                    && &p[3..6].iter().join("").parse().unwrap() % 5 == 0
-                    && &p[4..7].iter().join("").parse().unwrap() % 7 == 0
-                    && &p[5..8].iter().join("").parse().unwrap() % 11 == 0
-                    && &p[6..9].iter().join("").parse().unwrap() % 13 == 0
-                    && &p[7..10].iter().join("").parse().unwrap() % 17 == 0
-            })
+            .filter(|p| p[0] != 0
+                && ds.iter().enumerate().all(|(i, d)| &p[i + 1..i + 4]
+                    .iter()
+                    .join("")
+                    .parse()
+                    .unwrap()
+                    % d
+                    == 0))
             .filter_map(|p| p.iter().join("").parse::<usize>().ok())
             .sum::<usize>()
     );
