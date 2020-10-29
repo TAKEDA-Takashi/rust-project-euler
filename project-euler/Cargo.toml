@@ -11,4 +11,5 @@ itertools = "0.9.0"
 num = "0.3.0"
 lazy_static = "1.4.0"
 eval = "0.4.3"
+regex = "1.4.1"
 euler-lib = { path = "../euler-lib" }
