@@ -8,24 +8,90 @@
 // 以下繰り返し
 
 use euler_lib::factorial;
+use std::rc::Rc;
 
 fn main() {
-    println!("{}", (1..=10).map(|n| op(n)(n + 1)).sum::<isize>());
+    println!(
+        "{}",
+        Op::new(|n: isize| (0..=10).map(|i| (-n).pow(i)).sum::<isize>())
+            .take(10)
+            .enumerate()
+            .map(|(i, f)| f(i as isize + 2))
+            .sum::<isize>()
+    );
 }
 
-fn generating_function(n: isize) -> isize {
-    // 1 - n + n.pow(2) - n.pow(3) + n.pow(4) - n.pow(5) + n.pow(6) - n.pow(7) + n.pow(8) - n.pow(9)
-    //     + n.pow(10)
-
-    (0..=10).map(|i| (-n).pow(i)).sum::<isize>()
+struct Op {
+    generating_function: Box<dyn Fn(isize) -> isize>,
+    op: Option<Rc<dyn Fn(isize) -> isize>>,
+    k: isize,
 }
 
-fn op(k: isize) -> Box<dyn Fn(isize) -> isize> {
-    if k == 1 {
-        Box::new(|_| 1) // generating_function(1)
-    } else {
-        let f = op(k - 1);
-        let a = (generating_function(k) - f(k)) / factorial(&(k - 1));
-        Box::new(move |n| a * (1..k).map(|m| n - m).product::<isize>() + f(n))
+impl Op {
+    fn new(gf: impl Fn(isize) -> isize + 'static) -> Self {
+        Op {
+            generating_function: Box::new(gf),
+            op: None,
+            k: 0,
+        }
     }
 }
+
+impl Iterator for Op {
+    type Item = Rc<dyn Fn(isize) -> isize>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.k += 1;
+
+        if let Some(f) = self.op.take() {
+            let k = self.k;
+            let a = (self.generating_function.as_ref()(k) - f(k)) / factorial(&(k - 1));
+            let f = move |n| a * (1..k).map(|m| n - m).product::<isize>() + f(n);
+
+            self.op = Some(Rc::new(f));
+        } else {
+            let r = self.generating_function.as_ref()(self.k);
+            let f = move |_| r;
+
+            self.op = Some(Rc::new(f));
+        }
+
+        Some(Rc::clone(self.op.as_ref()?))
+    }
+}
+
+// #[test]
+// fn test_op() {
+//     let actual = vec![
+//         0_isize, //dummy
+//         1,
+//         683,
+//         44287,
+//         838861,
+//         8138021,
+//         51828151,
+//         247165843,
+//         954437177,
+//         3138105961,
+//         9090909091,
+//         23775972551,
+//     ];
+
+//     let op = op(&|n: isize| (0..=10).map(|i| (-n).pow(i)).sum::<isize>(), 10);
+//     for n in 1..11 {
+//         assert_eq!(actual[n], op(n as isize));
+//     }
+
+//     assert_ne!(actual[11], op(11));
+// }
+
+// fn op(gf: &impl Fn(isize) -> isize, k: isize) -> Box<dyn Fn(isize) -> isize> {
+//     if k == 1 {
+//         let a = gf(1);
+//         Box::new(move |_| a)
+//     } else {
+//         let f = op(gf, k - 1);
+//         let a = (gf(k) - f(k)) / factorial(&(k - 1));
+//         Box::new(move |n| a * (1..k).map(|m| n - m).product::<isize>() + f(n))
+//     }
+// }
