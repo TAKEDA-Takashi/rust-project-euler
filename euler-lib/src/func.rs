@@ -1,5 +1,6 @@
 use num::bigint::{RandBigInt, ToBigUint};
 use num::{one, range, range_inclusive, BigUint, FromPrimitive, Integer, One, ToPrimitive};
+use std::collections::HashSet;
 
 pub fn is_palindrome<T: ToString>(n: &T) -> bool {
     let s = n.to_string();
@@ -21,6 +22,11 @@ where
     } else {
         None
     }
+}
+
+pub fn is_pandigital(s: &str) -> bool {
+    let set = s.chars().collect::<HashSet<_>>();
+    set.len() == 9 && !set.contains(&'0')
 }
 
 pub fn combination<T>(n: &T, r: &T) -> T
