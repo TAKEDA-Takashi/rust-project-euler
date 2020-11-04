@@ -12,7 +12,7 @@
 //!
 //! 整数と (1,2,...,n) (n > 1) との連結積として得られる9桁のパンデジタル数の中で最大のものはいくつか?
 
-use std::collections::HashSet;
+use euler_lib::is_pandigital;
 
 fn main() {
     println!(
@@ -28,11 +28,6 @@ fn concatenated_product_pandigital(n: usize) -> Option<usize> {
     concatenated_product(n)
         .filter(|s| is_pandigital(s))
         .and_then(|s| s.parse().ok())
-}
-
-fn is_pandigital(s: &str) -> bool {
-    let set = s.chars().collect::<HashSet<_>>();
-    set.len() == 9 && !set.contains(&'0')
 }
 
 fn concatenated_product(n: usize) -> Option<String> {
