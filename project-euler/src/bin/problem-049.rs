@@ -27,12 +27,12 @@ fn main() {
             .filter(|[.., c]| set.contains(c))
             .filter(|[a, b, c]| {
                 let (x, y, z) = (
-                    a.to_string().chars().sorted().collect::<Vec<_>>(),
-                    b.to_string().chars().sorted().collect::<Vec<_>>(),
-                    c.to_string().chars().sorted().collect::<Vec<_>>(),
+                    a.to_string().chars().sorted(),
+                    b.to_string().chars().sorted(),
+                    c.to_string().chars().sorted(),
                 );
 
-                x == y && y == z
+                x.eq(y.clone()) && y.eq(z)
             })
             .find(|&[a, ..]| a != 1487)
             .unwrap()
