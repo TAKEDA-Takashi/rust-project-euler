@@ -43,7 +43,7 @@ fn matrix() -> Vec<Vec<usize>> {
     //     vec![805, 732, 524, 37, 331],
     // ]
 
-    BufReader::new(File::open("p081_matrix.txt").unwrap())
+    BufReader::new(File::open("files/p081_matrix.txt").unwrap())
         .lines()
         .filter_map(|line| line.ok())
         .map(|line| {

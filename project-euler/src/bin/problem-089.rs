@@ -75,7 +75,7 @@ fn arabic_to_roman(mut arabic: usize) -> String {
 }
 
 fn load_roman_numerals() -> Vec<String> {
-    BufReader::new(File::open("p089_roman.txt").unwrap())
+    BufReader::new(File::open("files/p089_roman.txt").unwrap())
         .lines()
         .filter_map(|line| line.ok())
         .collect()

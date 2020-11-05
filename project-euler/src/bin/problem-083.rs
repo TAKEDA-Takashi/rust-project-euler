@@ -97,7 +97,7 @@ fn matrix() -> Vec<Vec<(usize, usize)>> {
     // .map(|row| row.into_iter().map(|n| (n, usize::MAX)).collect())
     // .collect()
 
-    BufReader::new(File::open("p083_matrix.txt").unwrap())
+    BufReader::new(File::open("files/p083_matrix.txt").unwrap())
         .lines()
         .filter_map(|line| line.ok())
         .map(|line| {

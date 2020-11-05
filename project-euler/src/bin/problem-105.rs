@@ -17,7 +17,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 fn main() {
-    let set_sum = BufReader::new(File::open("p105_sets.txt").unwrap())
+    let set_sum = BufReader::new(File::open("files/p105_sets.txt").unwrap())
         .lines()
         .filter_map(|line| line.ok())
         .map(|line| {

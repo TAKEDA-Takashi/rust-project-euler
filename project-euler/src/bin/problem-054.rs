@@ -10,7 +10,7 @@ use std::io::{BufRead, BufReader};
 fn main() {
     println!(
         "{}",
-        BufReader::new(File::open("p054_poker.txt").unwrap())
+        BufReader::new(File::open("files/p054_poker.txt").unwrap())
             .lines()
             .filter_map(|result| result.ok())
             .filter(|line| poker_score(&line[0..14]) > poker_score(&line[15..]))

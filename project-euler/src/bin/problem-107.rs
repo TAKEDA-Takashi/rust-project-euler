@@ -47,7 +47,7 @@ fn optimize_graph(graph: &Vec<Vec<usize>>, init_node: usize) -> usize {
 }
 
 fn make_graph() -> Vec<Vec<usize>> {
-    BufReader::new(File::open("p107_network.txt").unwrap())
+    BufReader::new(File::open("files/p107_network.txt").unwrap())
         .lines()
         .filter_map(|result| result.ok())
         .map(|line| {

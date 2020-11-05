@@ -13,7 +13,7 @@ use std::collections::HashSet;
 use std::fs;
 
 fn main() {
-    let content = fs::read_to_string("p042_words.txt")
+    let content = fs::read_to_string("files/p042_words.txt")
         .unwrap()
         .replace("\"", "");
 

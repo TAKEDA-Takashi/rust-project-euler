@@ -17,7 +17,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 fn main() {
-    let contains_count = BufReader::new(File::open("p102_triangles.txt").unwrap())
+    let contains_count = BufReader::new(File::open("files/p102_triangles.txt").unwrap())
         .lines()
         .filter_map(|line| line.ok())
         .map(|line| {

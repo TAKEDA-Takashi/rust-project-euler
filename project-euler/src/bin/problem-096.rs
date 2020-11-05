@@ -7,7 +7,7 @@ use std::fs;
 
 fn main() {
     let re = Regex::new(r"Grid \d\d\r\n").unwrap();
-    let content = fs::read_to_string("p096_sudoku.txt").unwrap();
+    let content = fs::read_to_string("files/p096_sudoku.txt").unwrap();
     let questions: Vec<Vec<Vec<u32>>> = re
         .split(&content)
         .filter(|line| !line.is_empty())

@@ -17,7 +17,7 @@ use std::fs;
 type PermutationMatrix = Vec<(usize, usize)>;
 
 fn main() {
-    let content = fs::read_to_string("p098_words.txt")
+    let content = fs::read_to_string("files/p098_words.txt")
         .unwrap()
         .replace("\"", "");
 

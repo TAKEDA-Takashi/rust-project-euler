@@ -69,7 +69,7 @@ impl Node {
 }
 
 fn load_triangle() -> Vec<Vec<Node>> {
-    BufReader::new(File::open("p067_triangle.txt").unwrap())
+    BufReader::new(File::open("files/p067_triangle.txt").unwrap())
         .lines()
         .filter_map(|result| result.ok())
         .map(|line| {

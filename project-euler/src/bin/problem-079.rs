@@ -14,7 +14,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 fn main() {
-    let key_logs: Vec<Vec<char>> = BufReader::new(File::open("p079_keylog.txt").unwrap())
+    let key_logs: Vec<Vec<char>> = BufReader::new(File::open("files/p079_keylog.txt").unwrap())
         .lines()
         .filter_map(|line| line.ok())
         .map(|line| line.chars().collect())

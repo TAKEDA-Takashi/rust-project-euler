@@ -15,7 +15,7 @@ use itertools::Itertools;
 use std::fs;
 
 fn main() {
-    let content = fs::read_to_string("p059_cipher.txt").unwrap();
+    let content = fs::read_to_string("files/p059_cipher.txt").unwrap();
 
     for (a, b, c) in iproduct!(97..=122, 97..=122, 97..=122) {
         let text = content

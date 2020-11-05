@@ -61,7 +61,7 @@ fn matrix() -> Vec<Vec<(usize, usize)>> {
     // .map(|row| row.into_iter().map(|n| (n, n)).collect())
     // .collect()
 
-    BufReader::new(File::open("p082_matrix.txt").unwrap())
+    BufReader::new(File::open("files/p082_matrix.txt").unwrap())
         .lines()
         .filter_map(|line| line.ok())
         .map(|line| {

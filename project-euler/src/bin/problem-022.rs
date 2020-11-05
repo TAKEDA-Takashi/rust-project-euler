@@ -11,7 +11,7 @@
 use std::fs;
 
 fn main() {
-    let content = fs::read_to_string("p022_names.txt")
+    let content = fs::read_to_string("files/p022_names.txt")
         .unwrap()
         .replace("\"", "");
     let mut names: Vec<&str> = content.split(",").collect();

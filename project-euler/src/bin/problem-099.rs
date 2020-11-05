@@ -13,7 +13,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 fn main() {
-    let (row_num, _) = BufReader::new(File::open("p099_base_exp.txt").unwrap())
+    let (row_num, _) = BufReader::new(File::open("files/p099_base_exp.txt").unwrap())
         .lines()
         .filter_map(|line| line.ok())
         .enumerate()
