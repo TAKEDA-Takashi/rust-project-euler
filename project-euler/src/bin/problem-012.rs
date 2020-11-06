@@ -19,8 +19,7 @@
 //!
 //! では, 500個より多く約数をもつ最初の三角数はいくつか.
 
-use euler_lib::Prime;
-use itertools::Itertools;
+use euler_lib::{divisor_count, Prime};
 
 fn get_triangular_number(n: usize) -> (usize, usize, usize) {
     if n % 2 == 0 {
@@ -30,16 +29,6 @@ fn get_triangular_number(n: usize) -> (usize, usize, usize) {
     }
 }
 
-fn divisor_count(ps: &Vec<usize>) -> usize {
-    // 約数の個数は素因数の指数に+1をして総乗する
-    ps.into_iter()
-        .skip_while(|&&n| n == 1)
-        .group_by(|&n| n)
-        .into_iter()
-        .map(|(_, group)| group.count() + 1)
-        .product::<usize>()
-}
-
 fn main() {
     let find_div_count = 500;
     let mut prime = Prime::new();
@@ -47,7 +36,7 @@ fn main() {
     let tri = (1..)
         .map(|n| get_triangular_number(n))
         .find(|(a, b, _)| {
-            let mut ps = vec![];
+            let mut ps: Vec<usize> = vec![];
             ps.extend(prime.factorization(a));
             ps.extend(prime.factorization(b));
 
