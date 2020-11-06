@@ -1,3 +1,4 @@
+use itertools::Itertools;
 use num::bigint::{RandBigInt, ToBigUint};
 use num::{one, range, range_inclusive, BigUint, FromPrimitive, Integer, One, ToPrimitive};
 use std::collections::HashSet;
@@ -65,6 +66,21 @@ where
         }
         acc
     })
+}
+
+/// 素因数の列から約数の個数を計算する。
+/// psはソート済みの素数の列である必要があります。
+pub fn divisor_count<T>(ps: &Vec<T>) -> usize
+where
+    T: Integer,
+{
+    // 約数の個数は素因数の指数に+1をして総乗する
+    ps.iter()
+        .skip_while(|n| **n == one())
+        .group_by(|&n| n)
+        .into_iter()
+        .map(|(_, group)| group.count() + 1)
+        .product::<usize>()
 }
 
 pub fn primitive_pythagorean_triple<T>(m: T, n: T) -> Option<(T, T, T)>

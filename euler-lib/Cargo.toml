@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 rand = "0.7.0"
 num = { version = "0.3.0", features = ["rand"] }
+itertools = "0.9.0"
