@@ -14,43 +14,39 @@
 //!
 //! m = 50 のとき, この敷き詰め計数関数が初めて 1,000,000 を超える最小の n の値を求めよ.
 
-use std::collections::HashMap;
+use cached::proc_macro::cached;
 
 fn main() {
     let m = 50;
-    let mut memo = HashMap::new();
 
     for n in 50.. {
-        if block_combinations(m, n, &mut memo) > 1_000_000 {
+        if block_combinations(m, n) > 1_000_000 {
             println!("{}", n);
             break;
         }
     }
 }
 
-fn block_combinations(m: usize, n: usize, memo: &mut HashMap<usize, usize>) -> usize {
-    fn block_combinations0(m: usize, n: usize, memo: &mut HashMap<usize, usize>) -> usize {
+fn block_combinations(m: usize, n: usize) -> usize {
+    #[cached]
+    fn block_combinations0(m: usize, n: usize) -> usize {
         if m > n {
             return 0;
         } else if m == n {
             return 1;
-        } else if memo.contains_key(&n) {
-            return *memo.get(&n).unwrap();
         }
 
         let sum = (m..=(n - (m + 1)))
             .map(|k| {
-                (block_combinations0(m, k, memo) - block_combinations0(m, k - 1, memo))
+                (block_combinations0(m, k) - block_combinations0(m, k - 1))
                     * ((n - m - k) * (n - m - k + 1))
                     / 2
             })
             .sum::<usize>()
             + (n - m + 1) * (n - m + 2) / 2;
 
-        memo.insert(n, sum);
-
         sum
     }
 
-    block_combinations0(m, n, memo) + 1
+    block_combinations0(m, n) + 1
 }

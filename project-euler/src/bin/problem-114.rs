@@ -7,40 +7,35 @@
 //!
 //! 注意: 上の例では起こりえないが, 通常はブロックの大きさが複数混ざっていてもよい. 例えば, 8 ユニットの長さの 1 列では, 赤(3), 黒(1), 赤(4) を使うことができる.
 
-use std::collections::HashMap;
+use cached::proc_macro::cached;
 
 fn main() {
     let m = 3;
     let n = 50;
 
-    let mut memo = HashMap::new();
-
-    println!("{}", block_combinations(m, n, &mut memo));
+    println!("{}", block_combinations(m, n));
 }
 
-fn block_combinations(m: usize, n: usize, memo: &mut HashMap<usize, usize>) -> usize {
-    fn block_combinations0(m: usize, n: usize, memo: &mut HashMap<usize, usize>) -> usize {
+fn block_combinations(m: usize, n: usize) -> usize {
+    #[cached]
+    fn block_combinations0(m: usize, n: usize) -> usize {
         if m > n {
             return 0;
         } else if m == n {
             return 1;
-        } else if memo.contains_key(&n) {
-            return *memo.get(&n).unwrap();
         }
 
         let sum = (m..=(n - (m + 1)))
             .map(|k| {
-                (block_combinations0(m, k, memo) - block_combinations0(m, k - 1, memo))
+                (block_combinations0(m, k) - block_combinations0(m, k - 1))
                     * ((n - m - k) * (n - m - k + 1))
                     / 2
             })
             .sum::<usize>()
             + (n - m + 1) * (n - m + 2) / 2;
 
-        memo.insert(n, sum);
-
         sum
     }
 
-    block_combinations0(m, n, memo) + 1
+    block_combinations0(m, n) + 1
 }
