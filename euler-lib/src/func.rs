@@ -41,6 +41,23 @@ where
     combination(n, &(r.clone() - one())) * (n.clone() - r.clone() + one()) / r.clone()
 }
 
+pub fn modpow<T>(b: T, e: T, m: T) -> T
+where
+    T: Integer + Copy + std::ops::Shr<u32, Output = T>,
+{
+    fn modpow0<T>(b: T, e: T, m: T, r: T) -> T
+    where
+        T: Integer + Copy + std::ops::Shr<u32, Output = T>,
+    {
+        if e.is_zero() {
+            r
+        } else {
+            modpow0(b * b % m, e >> 1, m, if e.is_odd() { r * b % m } else { r })
+        }
+    }
+    modpow0(b, e, m, one())
+}
+
 pub fn factorial<T>(n: &T) -> T
 where
     T: Integer + FromPrimitive + ToPrimitive + Clone,
