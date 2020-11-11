@@ -41,13 +41,15 @@ where
     combination(n, &(r.clone() - one())) * (n.clone() - r.clone() + one()) / r.clone()
 }
 
-pub fn modpow<T>(b: T, e: T, m: T) -> T
+pub fn modpow<T, U>(b: T, e: U, m: T) -> T
 where
-    T: Integer + Copy + std::ops::Shr<u32, Output = T>,
+    T: Integer + Copy,
+    U: Integer + Copy + std::ops::Shr<u32, Output = U>,
 {
-    fn modpow0<T>(b: T, e: T, m: T, r: T) -> T
+    fn modpow0<T, U>(b: T, e: U, m: T, r: T) -> T
     where
-        T: Integer + Copy + std::ops::Shr<u32, Output = T>,
+        T: Integer + Copy,
+        U: Integer + Copy + std::ops::Shr<u32, Output = U>,
     {
         if e.is_zero() {
             r
