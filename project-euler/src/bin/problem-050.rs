@@ -13,12 +13,9 @@ use euler_lib::Prime;
 use std::collections::HashSet;
 
 fn main() {
-    let upper_bound = 1_000_000;
-    let prime_list: Vec<usize> = Prime::new()
-        .iter()
-        .take_while(|&p| p < upper_bound)
-        .collect();
-    let prime_set: HashSet<&usize> = prime_list.iter().collect();
+    let ubound = 1_000_000;
+    let prime_list: Vec<_> = Prime::new().iter().take_while(|&p| p < ubound).collect();
+    let prime_set: HashSet<_> = prime_list.iter().collect();
 
     let (.., max_prime, _max_len) = (0..prime_list.len())
         .map(|i| {
@@ -27,7 +24,7 @@ fn main() {
                 .try_fold(
                     /* sum, len, prime, max_len */ (0, 0, 0, 0),
                     |acc, &n| {
-                        if acc.0 >= upper_bound {
+                        if acc.0 >= ubound {
                             Err(acc)
                         } else {
                             let sum = acc.0 + n;
@@ -43,7 +40,7 @@ fn main() {
                 )
                 .unwrap_or_else(|n| n)
         })
-        .max_by(|(.., len1), (.., len2)| len1.cmp(len2))
+        .max_by_key(|(.., len)| *len)
         .unwrap();
 
     println!("{}", max_prime);
