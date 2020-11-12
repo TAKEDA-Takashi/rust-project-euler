@@ -25,13 +25,13 @@ fn main() {
 }
 
 // (x0, y0)を通り直交する直線の式
-fn orthogonal_line(x0: isize, y0: isize) -> Box<dyn Fn(isize) -> Option<isize>> {
-    Box::new(move |x| {
+fn orthogonal_line(x0: isize, y0: isize) -> impl Fn(isize) -> Option<isize> {
+    move |x| {
         let m = (-x0 * x) + (x0 * x0 + y0 * y0);
         if m % y0 == 0 {
             Some(m / y0)
         } else {
             None
         }
-    })
+    }
 }
