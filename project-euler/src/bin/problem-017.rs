@@ -38,7 +38,7 @@ fn main() {
     numeral_dict.insert(80, "eighty");
     numeral_dict.insert(90, "ninety");
 
-    let to_numeral = move |n: usize| {
+    let to_numeral = |n: usize| {
         assert!(0 < n && n <= 1000);
 
         if n == 1000 {
