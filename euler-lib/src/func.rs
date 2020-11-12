@@ -168,7 +168,7 @@ where
     let lbound = BigUint::from(2_u32);
     let ubound = &n - 2_u32;
 
-    (0..MILLER_RABIN_ROUND).all(move |_| {
+    (0..MILLER_RABIN_ROUND).all(|_| {
         let a = rng.gen_biguint_range(&lbound, &ubound);
 
         let y = a.modpow(&d, &n);
