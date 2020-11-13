@@ -23,7 +23,7 @@
 use euler_lib::Prime;
 
 fn main() {
-    let mut prime = Prime::new();
+    let prime = Prime::new();
 
     println!(
         "{}",

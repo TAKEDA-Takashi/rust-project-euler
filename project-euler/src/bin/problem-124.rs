@@ -7,7 +7,7 @@ use itertools::Itertools;
 fn main() {
     let ubound = 100_000;
 
-    let mut prime = Prime::<usize>::new();
+    let prime = Prime::<usize>::new();
 
     println!(
         "{:?}",

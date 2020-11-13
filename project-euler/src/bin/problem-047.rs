@@ -18,7 +18,7 @@ use itertools::Itertools;
 use std::collections::HashSet;
 
 fn main() {
-    let mut prime = Prime::new();
+    let prime = Prime::new();
 
     let w = (120..)
         .tuple_windows()

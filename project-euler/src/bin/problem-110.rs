@@ -20,7 +20,7 @@ fn main() {
 
     let pow_vec = find_best_pow(target);
 
-    let mut prime = Prime::<u128>::new();
+    let prime = Prime::<u128>::new();
     let mut prime_iter = prime.iter();
 
     let n = pow_vec

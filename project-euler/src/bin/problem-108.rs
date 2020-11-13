@@ -23,7 +23,7 @@
 use euler_lib::{divisor_count, Prime};
 
 fn main() {
-    let mut prime = Prime::<u64>::new();
+    let prime = Prime::<u64>::new();
     let n = prime.iter().take(6).product::<u64>();
 
     for m in 2..=17 {

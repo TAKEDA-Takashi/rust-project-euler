@@ -13,12 +13,8 @@
 //! n = 0 から始めて連続する整数で素数を生成したときに最長の長さとなる上の二次式の, 係数 a, b の積を答えよ.
 
 use euler_lib::Prime;
-use lazy_static::lazy_static;
-use std::sync::Mutex;
 
-lazy_static! {
-    static ref PRIME: Mutex<Prime<isize>> = Mutex::new(Prime::new());
-}
+thread_local!(static PRIME: Prime<isize> = Prime::new());
 
 fn main() {
     let (a, b) = find_longest_prime_gen(get_quadratic_function()).unwrap();
@@ -37,7 +33,7 @@ fn find_longest_prime_gen(
             1 => Some((v[0].1, v[0].2)),
             _ => find_longest_prime_gen0(
                 v.into_iter()
-                    .filter(|(f, ..)| PRIME.lock().unwrap().is_prime(&f.as_ref()(n)))
+                    .filter(|(f, ..)| PRIME.with(|prime| prime.is_prime(&f.as_ref()(n))))
                     .collect(),
                 n + 1,
             ),

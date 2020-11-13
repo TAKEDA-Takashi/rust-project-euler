@@ -28,7 +28,7 @@ use std::collections::{HashMap, HashSet};
 fn main() {
     // let ubound = 1000;
     let ubound = 120_000;
-    let mut prime = Prime::<usize>::new();
+    let prime = Prime::<usize>::new();
     let prime_set: HashSet<_> = prime.iter().take_while(|&p| p < ubound).collect();
 
     let mut rad_memo = HashMap::new();

@@ -10,7 +10,7 @@ use euler_lib::Prime;
 use std::collections::BTreeSet;
 
 fn main() {
-    let mut prime = Prime::new();
+    let prime = Prime::new();
     let mut prime_iter = prime.iter();
     let mut prime_set: BTreeSet<usize> = prime_iter.by_ref().take(4).collect();
     let mut v = vec![];

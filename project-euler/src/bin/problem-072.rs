@@ -15,10 +15,10 @@ use euler_lib::Prime;
 use itertools::Itertools;
 
 fn main() {
-    let mut prime = Prime::<usize>::new();
+    let prime = Prime::<usize>::new();
 
     let sum: usize = (2..=1_000_000)
-        .map(|n| phi(&n, prime.factorization(&n)))
+        .map(|n| phi(&n, &prime.factorization(&n)))
         .sum();
     println!("{}", sum);
 }

@@ -6,23 +6,15 @@
 
 use euler_lib::Prime;
 use itertools::Itertools;
-use lazy_static::lazy_static;
 use std::iter::{once, repeat};
-use std::sync::Mutex;
 
-lazy_static! {
-    static ref PRIME: Mutex<Prime<usize>> = Mutex::new(Prime::<usize>::new());
-}
+thread_local!(static PRIME: Prime<usize> = Prime::new());
 
 fn main() {
     let upper_bound = 10_000;
 
-    let prime_list = PRIME
-        .lock()
-        .unwrap()
-        .iter()
-        .take_while(|&p| p < upper_bound)
-        .collect_vec();
+    let prime_list =
+        PRIME.with(|prime| prime.iter().take_while(|&p| p < upper_bound).collect_vec());
     let v = find_prime_pair_sets(&prime_list, 5).unwrap();
 
     println!("{}", v.iter().sum::<usize>());
@@ -53,8 +45,9 @@ fn is_prime_pair(v: &Vec<usize>) -> bool {
     let p = *v.last().unwrap();
 
     (0..v.len() - 1).all(|i| {
-        let mut prime = PRIME.lock().unwrap();
-        prime.is_prime(&(v[i] * 10_usize.pow((p as f64).log10() as u32 + 1) + p))
-            && prime.is_prime(&(p * 10_usize.pow((v[i] as f64).log10() as u32 + 1) + v[i]))
+        PRIME.with(|prime| {
+            prime.is_prime(&(v[i] * 10_usize.pow((p as f64).log10() as u32 + 1) + p))
+                && prime.is_prime(&(p * 10_usize.pow((v[i] as f64).log10() as u32 + 1) + v[i]))
+        })
     })
 }

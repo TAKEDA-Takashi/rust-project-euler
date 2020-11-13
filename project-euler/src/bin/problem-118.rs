@@ -11,7 +11,7 @@ use std::collections::{HashMap, HashSet};
 fn main() {
     let numbers: HashSet<_> = (1..=9).collect();
 
-    let mut prime = Prime::<u32>::new();
+    let prime = Prime::<u32>::new();
     let mut prime_iter = prime.iter().filter(|&p| !p.to_string().contains(&"0"));
 
     let p1: HashSet<_> = prime_iter.by_ref().take_while(|&p| p < 10).collect();

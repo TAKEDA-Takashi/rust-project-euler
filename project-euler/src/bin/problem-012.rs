@@ -31,7 +31,7 @@ fn get_triangular_number(n: usize) -> (usize, usize, usize) {
 
 fn main() {
     let find_div_count = 500;
-    let mut prime = Prime::new();
+    let prime = Prime::new();
 
     let tri = (1..)
         .map(|n| get_triangular_number(n))

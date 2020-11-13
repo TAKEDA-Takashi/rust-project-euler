@@ -11,7 +11,7 @@
 use euler_lib::Prime;
 
 fn main() {
-    let mut prime = Prime::<usize>::new();
+    let prime = Prime::<usize>::new();
     let mut prime_iter = prime.iter().enumerate().skip(7037).map(|(n, p)| (n + 1, p));
 
     let bound = 10_usize.pow(10);

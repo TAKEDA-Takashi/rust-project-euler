@@ -13,7 +13,7 @@ use std::cmp::PartialOrd;
 
 fn main() {
     let upper_bound = 10_000_000;
-    let mut prime = Prime::<usize>::new();
+    let prime = Prime::<usize>::new();
     let ps = prime
         .iter()
         .take_while(|p| p * p < upper_bound)

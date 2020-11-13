@@ -1,6 +1,8 @@
 use num::{one, range_step, zero, CheckedAdd, FromPrimitive, Integer};
+use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::collections::BTreeMap;
+use std::rc::Rc;
 
 pub mod func;
 
@@ -8,8 +10,8 @@ pub use func::*;
 
 #[derive(Debug)]
 pub struct Prime<T> {
-    prime_factor_map: BTreeMap<T, Vec<T>>,
-    prime_list: Vec<T>,
+    prime_factor_map: RefCell<BTreeMap<T, Vec<T>>>,
+    prime_list: Rc<RefCell<Vec<T>>>,
 }
 
 impl<T> Prime<T>
@@ -18,37 +20,35 @@ where
 {
     pub fn new() -> Prime<T> {
         Prime {
-            prime_factor_map: BTreeMap::new(),
-            prime_list: vec![],
+            prime_factor_map: RefCell::new(BTreeMap::new()),
+            prime_list: Rc::new(RefCell::new(vec![])),
         }
     }
 
-    pub fn factorization(&mut self, n: &T) -> &Vec<T> {
-        if self.prime_factor_map.contains_key(&n) {
-            return &self.prime_factor_map[&n];
+    pub fn factorization(&self, n: &T) -> Vec<T> {
+        if self.prime_factor_map.borrow().contains_key(n) {
+            return self.prime_factor_map.borrow()[n].clone();
         }
 
         let mut prime_iter = PrimeIterator {
-            ps: &mut self.prime_list,
+            ps: Rc::clone(&self.prime_list),
             index: 0,
         };
 
-        self.prime_factor_map.insert(
-            n.clone(),
-            prime_factorization(&n, &mut prime_iter, &self.prime_factor_map),
-        );
+        let v = prime_factorization(n, &mut prime_iter, &self.prime_factor_map.borrow());
+        self.prime_factor_map.borrow_mut().insert(n.clone(), v);
 
-        &self.prime_factor_map[&n]
+        self.prime_factor_map.borrow()[n].clone()
     }
 
-    pub fn iter(&mut self) -> PrimeIterator<T> {
+    pub fn iter(&self) -> PrimeIterator<T> {
         PrimeIterator {
-            ps: &mut self.prime_list,
+            ps: Rc::clone(&self.prime_list),
             index: 0,
         }
     }
 
-    pub fn is_prime(&mut self, n: &T) -> bool {
+    pub fn is_prime(&self, n: &T) -> bool {
         if *n <= one() {
             return false;
         }
@@ -96,12 +96,12 @@ where
 }
 
 #[derive(Debug)]
-pub struct PrimeIterator<'a, T> {
-    ps: &'a mut Vec<T>,
+pub struct PrimeIterator<T> {
+    ps: Rc<RefCell<Vec<T>>>,
     index: usize,
 }
 
-impl<'a, T> Iterator for PrimeIterator<'a, T>
+impl<T> Iterator for PrimeIterator<T>
 where
     T: Integer + CheckedAdd + Clone + FromPrimitive,
 {
@@ -111,32 +111,34 @@ where
         let two = T::from_u32(2)?;
         let three = T::from_u32(3)?;
 
-        let n = self.ps.get(self.index);
+        let mut mut_ps = self.ps.borrow_mut();
+
+        let n = mut_ps.get(self.index);
         self.index += 1;
 
         if let Some(p) = n {
             return Some(p.clone());
         }
 
-        let last = self.ps.last();
+        let last = mut_ps.last();
 
         if last == None {
-            self.ps.push(two.clone());
+            mut_ps.push(two.clone());
             Some(two.clone())
         } else if last == Some(&two) {
-            self.ps.push(three.clone());
+            mut_ps.push(three.clone());
             Some(three.clone())
         } else {
             let start = last.map(|a| a.clone() + two.clone()).unwrap();
             let next_prime =
                 range_step(start.clone(), start * T::from_u32(2)?, two.clone()).find(|n| {
-                    self.ps
+                    mut_ps
                         .iter()
                         .take_while(|&p| p.clone() * p.clone() <= *n)
                         .all(|p| n.clone() % p.clone() != zero())
                 })?;
 
-            self.ps.push(next_prime.clone());
+            mut_ps.push(next_prime.clone());
             Some(next_prime.clone())
         }
     }
@@ -226,18 +228,18 @@ mod tests {
 
     #[test]
     fn prime_factorization() {
-        let mut prime = Prime::new();
+        let prime = Prime::new();
 
-        assert_eq!(vec![2, 2, 2], *prime.factorization(&8));
-        assert_eq!(vec![5, 5], *prime.factorization(&25));
-        assert_eq!(vec![2, 2, 3, 5], *prime.factorization(&60));
-        assert_eq!(vec![17], *prime.factorization(&17));
-        assert_eq!(vec![23, 29], *prime.factorization(&667));
+        assert_eq!(vec![2, 2, 2], prime.factorization(&8));
+        assert_eq!(vec![5, 5], prime.factorization(&25));
+        assert_eq!(vec![2, 2, 3, 5], prime.factorization(&60));
+        assert_eq!(vec![17], prime.factorization(&17));
+        assert_eq!(vec![23, 29], prime.factorization(&667));
     }
 
     #[test]
     fn prime_iterator() {
-        let mut prime: Prime<BigUint> = Prime::new();
+        let prime: Prime<BigUint> = Prime::new();
 
         let mut prime_iter = prime.iter();
         assert_eq!(Some(BigUint::from(2_u32)), prime_iter.next());
