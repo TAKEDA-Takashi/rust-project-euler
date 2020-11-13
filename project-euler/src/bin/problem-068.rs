@@ -66,13 +66,7 @@ fn main() {
     let magic_ngon_ring = rings
         .iter()
         .map(|r| r.to_string())
-        .filter(|s| {
-            if let Some(len) = length {
-                s.len() == len
-            } else {
-                true
-            }
-        })
+        .filter(|s| length.map_or(true, |len| s.len() == len))
         .max()
         .unwrap();
 
