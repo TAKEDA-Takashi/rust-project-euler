@@ -16,37 +16,21 @@
 //!
 //! d < 1000 なる 1/d の中で小数部の循環節が最も長くなるような d を求めよ.
 
-use euler_lib::Prime;
-use lazy_static::lazy_static;
-use num::BigUint;
-
-lazy_static! {
-    static ref ZERO: BigUint = BigUint::from(0_u32);
-    static ref ONE: BigUint = BigUint::from(1_u32);
-    static ref TEN: BigUint = BigUint::from(10_u32);
-}
+use euler_lib::{get_divisors, modpow, Prime};
 
 fn main() {
-    let ps: Vec<BigUint> = Prime::<BigUint>::new()
+    let d = Prime::<usize>::new()
         .iter()
-        .skip(3) // 2と5は循環小数にならない。3はついで
-        .take_while(|p| *p < BigUint::from(1000_u32))
-        .collect();
+        .take_while(|&p| p < 1000)
+        .collect::<Vec<_>>() // 逆順で取り出すために一度Vecにしている
+        .into_iter()
+        .rev()
+        .find(|&p| {
+            get_divisors(&(p - 1))
+                .iter()
+                .skip(1)
+                .all(|&m| modpow(10, m, p) != 1)
+        });
 
-    println!("{}", find_max_cycle(ps).unwrap());
-}
-
-fn find_max_cycle(ps: Vec<BigUint>) -> Option<BigUint> {
-    fn find_max_cycle0(ps: Vec<BigUint>, one_seq: BigUint) -> Option<BigUint> {
-        match ps.len() {
-            0 => None,
-            1 => Some(ps[0].clone()),
-            _ => find_max_cycle0(
-                ps.into_iter().filter(|p| &one_seq % p != *ZERO).collect(),
-                one_seq * &*TEN + &*ONE,
-            ),
-        }
-    }
-
-    find_max_cycle0(ps, BigUint::from(11_u32))
+    println!("{:?}", d)
 }
