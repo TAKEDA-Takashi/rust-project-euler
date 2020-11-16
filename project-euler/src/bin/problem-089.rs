@@ -1,21 +1,23 @@
 //! http://odz.sakura.ne.jp/projecteuler/index.php?cmd=read&page=Problem%2089
 //! Roman numerals
 
-use lazy_static::lazy_static;
+use once_cell::sync::Lazy;
 use std::cmp::Reverse;
 use std::collections::{BTreeMap, HashMap};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-lazy_static! {
-    static ref ROMAN: HashMap<&'static str, usize> =
-        vec!["I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M"]
-            .into_iter()
-            .zip(vec![1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000].into_iter())
-            .collect();
-    static ref ARABIC: BTreeMap<Reverse<usize>, &'static str> =
-        ROMAN.iter().map(|(k, v)| (Reverse(*v), *k)).collect();
-}
+static ROMAN: Lazy<HashMap<&'static str, usize>> = Lazy::new(|| {
+    vec![
+        "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M",
+    ]
+    .into_iter()
+    .zip(vec![1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000].into_iter())
+    .collect()
+});
+
+static ARABIC: Lazy<BTreeMap<Reverse<usize>, &'static str>> =
+    Lazy::new(|| (*ROMAN).iter().map(|(k, v)| (Reverse(*v), *k)).collect());
 
 fn main() {
     let roman_numerals: Vec<String> = load_roman_numerals();
@@ -38,10 +40,10 @@ fn roman_to_arabic(roman: &str) -> usize {
     let cs: Vec<char> = roman.chars().collect();
 
     while i + 1 < cs.len() {
-        if let Some(a) = ROMAN.get::<str>(&cs[i..=i + 1].iter().collect::<String>()) {
+        if let Some(a) = (*ROMAN).get::<str>(&cs[i..=i + 1].iter().collect::<String>()) {
             arabic += a;
             i += 2;
-        } else if let Some(a) = ROMAN.get::<str>(&cs[i].to_string()) {
+        } else if let Some(a) = (*ROMAN).get::<str>(&cs[i].to_string()) {
             arabic += a;
             i += 1;
         } else {
@@ -50,7 +52,7 @@ fn roman_to_arabic(roman: &str) -> usize {
     }
 
     if i < cs.len() {
-        if let Some(a) = ROMAN.get::<str>(&cs[i].to_string()) {
+        if let Some(a) = (*ROMAN).get::<str>(&cs[i].to_string()) {
             arabic += a;
         }
     }
@@ -59,9 +61,7 @@ fn roman_to_arabic(roman: &str) -> usize {
 }
 
 fn arabic_to_roman(mut arabic: usize) -> String {
-    let mut roman = String::new();
-
-    for (rn, r) in ARABIC.iter() {
+    (*ARABIC).iter().fold(String::new(), |mut roman, (rn, r)| {
         let n = rn.0;
         let c = arabic / n;
 
@@ -69,9 +69,9 @@ fn arabic_to_roman(mut arabic: usize) -> String {
             roman.push_str(&r.repeat(c));
             arabic %= n;
         }
-    }
 
-    roman
+        roman
+    })
 }
 
 fn load_roman_numerals() -> Vec<String> {
