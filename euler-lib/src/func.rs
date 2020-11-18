@@ -2,6 +2,7 @@ use itertools::Itertools;
 use num::bigint::{RandBigInt, ToBigUint};
 use num::{one, range, range_inclusive, BigUint, FromPrimitive, Integer, One, ToPrimitive};
 use std::collections::HashSet;
+use std::iter::once;
 
 pub fn is_palindrome<T: ToString>(n: &T) -> bool {
     let s = n.to_string();
@@ -100,6 +101,22 @@ where
         .into_iter()
         .map(|(_, group)| group.count() + 1)
         .product::<usize>()
+}
+
+/// 素因数の列から約数を生成する。
+pub fn make_divisors<T>(ps: &Vec<T>) -> Vec<T>
+where
+    T: Integer + Copy + std::iter::Product,
+{
+    once(one())
+        .chain((1..=ps.len()).flat_map(|c| {
+            ps.iter()
+                .combinations(c)
+                .map(|combi| combi.into_iter().copied().product::<T>())
+        }))
+        .sorted()
+        .dedup()
+        .collect_vec()
 }
 
 pub fn primitive_pythagorean_triple<T>(m: T, n: T) -> Option<(T, T, T)>
@@ -236,6 +253,13 @@ mod tests {
         assert_eq!(vec![1], get_divisors(&5));
         assert_eq!(vec![1, 2, 4], get_divisors(&8));
         assert_eq!(vec![1, 2, 3, 6, 9], get_divisors(&18));
+    }
+
+    #[test]
+    fn test_make_divisors() {
+        assert_eq!(vec![1, 2, 3, 4, 6, 12], make_divisors(&vec![2, 2, 3]));
+        assert_eq!(vec![1, 3, 5, 15], make_divisors(&vec![3, 5]));
+        assert_eq!(vec![1, 2, 4, 8, 16], make_divisors(&vec![2, 2, 2, 2]));
     }
 
     #[test]
