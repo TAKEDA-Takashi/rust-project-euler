@@ -5,25 +5,28 @@
 //! それでは, 1億5000万未満の n の総和を求めよ.
 
 use euler_lib::is_prime;
+use rayon::prelude::*;
 
 fn main() {
     let prime_addon = [1, 3, 7, 9, 13, 27];
     let not_prime_addon = [19, 21];
 
-    let mut sum = 0;
-
-    for n in (1..15_000_000_u128)
+    let sum = (1..15_000_000_u128)
+        .into_par_iter()
         .filter(|n| n % 3 != 0 && n % 7 != 0 && n % 13 != 0)
         .map(|n| n * 10)
-    {
-        let n2 = n * n;
-        if prime_addon.iter().all(|m| is_prime(&(n2 + m)))
-            && not_prime_addon.iter().all(|m| !is_prime(&(n2 + m)))
-        {
-            sum += n;
-            // println!("{}", n);
-        }
-    }
+        .map(|n| {
+            let n2 = n * n;
+            if prime_addon.par_iter().all(|m| is_prime(&(n2 + m)))
+                && not_prime_addon.par_iter().all(|m| !is_prime(&(n2 + m)))
+            {
+                // println!("{}", n);
+                n
+            } else {
+                0
+            }
+        })
+        .sum::<u128>();
 
     println!("{}", sum);
 }
