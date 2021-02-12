@@ -19,11 +19,7 @@ where
     T: Integer + Clone + ToString,
 {
     let m = t.0.clone() * t.1.clone();
-    if is_palindrome(&m) {
-        Some((t.0.clone(), t.1.clone(), m.clone()))
-    } else {
-        None
-    }
+    is_palindrome(&m).then(|| (t.0.clone(), t.1.clone(), m.clone()))
 }
 
 pub fn is_pandigital(s: &str) -> bool {

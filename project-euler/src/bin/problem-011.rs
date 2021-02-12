@@ -35,55 +35,39 @@ fn vertical(ns: &Vec<usize>, index: usize) -> Option<usize> {
     let row = index / LATTICE_SIZE;
     let col = index % LATTICE_SIZE;
 
-    if row + CALC_LEN - 1 >= LATTICE_SIZE {
-        return None;
-    }
-
-    Some(
+    (row + CALC_LEN - 1 < LATTICE_SIZE).then(|| {
         (0..CALC_LEN)
             .map(|i| ns[LATTICE_SIZE * (row + i) + col])
-            .product(),
-    )
+            .product()
+    })
 }
 
 fn horizontal(ns: &Vec<usize>, index: usize) -> Option<usize> {
     let col = index % LATTICE_SIZE;
 
-    if col + CALC_LEN - 1 >= LATTICE_SIZE {
-        return None;
-    }
-
-    Some((0..CALC_LEN).map(|i| ns[index + i]).product())
+    (col + CALC_LEN - 1 < LATTICE_SIZE).then(|| (0..CALC_LEN).map(|i| ns[index + i]).product())
 }
 
 fn diagonal_right(ns: &Vec<usize>, index: usize) -> Option<usize> {
     let row = index / LATTICE_SIZE;
     let col = index % LATTICE_SIZE;
 
-    if row + CALC_LEN - 1 >= LATTICE_SIZE || col + CALC_LEN - 1 >= LATTICE_SIZE {
-        return None;
-    }
-
-    Some(
+    (row + CALC_LEN - 1 < LATTICE_SIZE && col + CALC_LEN - 1 < LATTICE_SIZE).then(|| {
         (0..CALC_LEN)
             .map(|i| ns[LATTICE_SIZE * (row + i) + col + i])
-            .product(),
-    )
+            .product()
+    })
 }
 
 fn diagonal_left(ns: &Vec<usize>, index: usize) -> Option<usize> {
     let row = index / LATTICE_SIZE;
     let col = index % LATTICE_SIZE;
 
-    if row + CALC_LEN - 1 >= LATTICE_SIZE || col as isize - (CALC_LEN as isize - 1) < 0 {
-        return None;
-    }
-
-    Some(
+    (row + CALC_LEN - 1 < LATTICE_SIZE && col as isize - (CALC_LEN as isize - 1) >= 0).then(|| {
         (0..CALC_LEN)
             .map(|i| ns[LATTICE_SIZE * (row + i) + col - i])
-            .product(),
-    )
+            .product()
+    })
 }
 
 fn calculate_number(ns: &Vec<usize>, index: usize) -> Vec<Option<usize>> {

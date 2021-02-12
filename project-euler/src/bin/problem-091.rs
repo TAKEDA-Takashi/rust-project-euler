@@ -28,10 +28,6 @@ fn main() {
 fn orthogonal_line(x0: isize, y0: isize) -> impl Fn(isize) -> Option<isize> {
     move |x| {
         let m = (-x0 * x) + (x0 * x0 + y0 * y0);
-        if m % y0 == 0 {
-            Some(m / y0)
-        } else {
-            None
-        }
+        (m % y0 == 0).then(|| m / y0)
     }
 }

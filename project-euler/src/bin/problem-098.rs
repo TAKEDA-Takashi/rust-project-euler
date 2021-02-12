@@ -73,11 +73,10 @@ fn get_anagram_number(n: &u64, matrix: &PermutationMatrix) -> Option<u64> {
     }
 
     // 先頭が0だと桁が変わるのでNG
-    if ns[0] == '0' {
-        None
-    } else {
-        Some(ns.iter().collect::<String>().parse().ok()?)
-    }
+    (ns[0] != '0')
+        .then(|| ns.iter().collect::<String>().parse())
+        .transpose()
+        .ok()?
 }
 
 fn get_permutation_matrix(v1: &Vec<char>, v2: &Vec<char>) -> PermutationMatrix {

@@ -49,14 +49,7 @@ fn main() {
         "{}",
         (2..=10000)
             .map(|n| (n, (n as f64).sqrt(), vec![]))
-            .filter_map(|(n, s, v)| {
-                let z = s as i32;
-                if s.floor() != s {
-                    Some((n, z, v))
-                } else {
-                    None
-                }
-            })
+            .filter_map(|(n, s, v)| (s.floor() != s).then(|| (n, s as i32, v)))
             .map(|(n, z, mut v)| {
                 let mut b = -z;
                 let mut d = 1;

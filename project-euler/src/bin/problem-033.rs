@@ -26,12 +26,7 @@ fn main() {
 
                 let digit_canceling = |t| {
                     let (m2, d2) = trip_number(m, d, t);
-
-                    if m * d2 == d * m2 {
-                        return Some((m, d));
-                    } else {
-                        None
-                    }
+                    (m * d2 == d * m2).then(|| (m, d))
                 };
 
                 let mn = mutual_number(m, d);

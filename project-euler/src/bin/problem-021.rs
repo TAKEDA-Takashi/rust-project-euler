@@ -18,11 +18,7 @@ fn main() {
                 let div_sum = get_divisors(&n).iter().sum();
                 let div_sum_rev = get_divisors(&div_sum).iter().sum();
 
-                if n != div_sum && n == div_sum_rev {
-                    Some(n)
-                } else {
-                    None
-                }
+                (n != div_sum && n == div_sum_rev).then(|| n)
             })
             .sum::<usize>()
     );

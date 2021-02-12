@@ -23,10 +23,7 @@ fn main() {
 
             loop {
                 if (&t % n).is_zero() {
-                    if (n - 1) % t.to_string().len() == 0 {
-                        return Some(n);
-                    }
-                    return None;
+                    return ((n - 1) % t.to_string().len() == 0).then(|| n);
                 }
 
                 t = t * 10_u32 + 1_u32;

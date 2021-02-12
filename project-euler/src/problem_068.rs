@@ -40,14 +40,10 @@ impl RingBuilder {
     }
 
     pub fn build(&self) -> Option<Ring> {
-        if self.ring.columns.len() == self.n_gon
+        (self.ring.columns.len() == self.n_gon
             && self.ring.columns.first().unwrap().inner_first()
-                == self.ring.columns.last().unwrap().inner_second()
-        {
-            Some(self.ring.clone())
-        } else {
-            None
-        }
+                == self.ring.columns.last().unwrap().inner_second())
+        .then(|| self.ring.clone())
     }
 }
 
